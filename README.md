@@ -566,7 +566,7 @@ StratProof Lab is audit-only by design. It is not a broker, exchange, investment
 
 Current package status: **pre-release / GitHub preparation**.
 
-The public package has passed smoke tests and safety scanning. The canonical AGPL-3.0 license text is present. This repository is now published as the v0.1.0 Community Preview. Future releases will continue improving screenshots, branding, docs, and Pro roadmap clarity.
+The public package has passed smoke tests and safety scanning. The canonical AGPL-3.0 license text is present. This repository is published as the v0.1.0 Community Preview. Future releases will continue improving screenshots, branding, docs, and Pro roadmap clarity.
 
 
 
@@ -598,7 +598,7 @@ Planned annual incentive:
 
 ## v0.1.0 Community Preview
 
-StratProof Lab is being prepared for a controlled GitHub community preview. The release package includes a one-command demo, visual GitHub assets, release notes, issue templates, AGPL licensing, and a final launch copy pack.
+StratProof Lab is now published as a controlled GitHub Community Preview. The release package includes a one-command demo, visual GitHub assets, release notes, issue templates, AGPL licensing, and a final launch copy pack.
 
 
 ## Community vs Pro preview
