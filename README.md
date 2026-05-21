@@ -276,6 +276,12 @@ Payment direction: **card-first for trust, crypto-ready for global traders**. Pl
 
 Paid editions are not required to use Community. Community should remain useful on its own. The public repo has no active checkout, no license server, and no payment secrets.
 
+## Current release
+
+Current public release: `v0.1.0-community-preview`.
+
+StratProof Lab Community is available now as a local-first, audit-only GitHub preview. Paid editions are planned, but no checkout, wallet, license server, or payment secret is active in this repository.
+
 ## Quickstart
 
 ### 1. Install
@@ -560,7 +566,7 @@ StratProof Lab is audit-only by design. It is not a broker, exchange, investment
 
 Current package status: **pre-release / GitHub preparation**.
 
-The public package has passed smoke tests and safety scanning. The canonical AGPL-3.0 license text is present. Before publishing, complete a final human review of screenshots, logo/brand assets, README copy, and release notes.
+The public package has passed smoke tests and safety scanning. The canonical AGPL-3.0 license text is present. This repository is now published as the v0.1.0 Community Preview. Future releases will continue improving screenshots, branding, docs, and Pro roadmap clarity.
 
 
 
