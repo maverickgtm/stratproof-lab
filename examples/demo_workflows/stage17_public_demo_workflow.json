@@ -1,0 +1,33 @@
+{
+  "stage": "17",
+  "product": "StratProof Lab",
+  "workflow": "public_github_demo",
+  "steps": [
+    {
+      "name": "Generate demo market data",
+      "script": "scripts/stage13_generate_multitimeframe_demo_cache.py"
+    },
+    {
+      "name": "Run multi-timeframe idea audit",
+      "script": "scripts/stage13_run_multitimeframe_audit.py"
+    },
+    {
+      "name": "Build evidence report",
+      "script": "scripts/stage16_build_evidence_report.py"
+    },
+    {
+      "name": "Open Formula Builder UI",
+      "file": "app/auditor_dashboard/formula_builder_ui.html"
+    },
+    {
+      "name": "Open Evidence Report Builder UI",
+      "file": "app/auditor_dashboard/evidence_report_builder_ui.html"
+    },
+    {
+      "name": "Open Research Brain View",
+      "file": "app/auditor_dashboard/research_brain_view.html"
+    }
+  ],
+  "safety_model": "audit_only_by_design",
+  "public_message": "Build an idea, audit it, check evidence quality, generate a report, and visually see how the research system works."
+}

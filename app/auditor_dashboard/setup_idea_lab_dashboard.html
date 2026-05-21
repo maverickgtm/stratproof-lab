@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>StratProof Lab — Strategy Auditor</title>
+  <style>
+    body{font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:#07111f;color:#e8f2ff;margin:0}
+    header{padding:28px 34px;background:linear-gradient(135deg,#0f233d,#08111f);border-bottom:1px solid #1c3558}
+    h1{margin:0;font-size:32px}.tag{color:#9fc5ff;margin-top:6px}.pill{display:inline-block;border:1px solid #355985;border-radius:999px;padding:6px 10px;margin:4px;color:#b9d7ff;background:#0a1a2e}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:16px;padding:24px}.card{background:#0b1a2e;border:1px solid #1f3a5f;border-radius:18px;padding:18px;box-shadow:0 12px 30px rgba(0,0,0,.25)}
+    label{display:block;color:#9fc5ff;font-size:13px;margin:12px 0 6px}select,input,textarea{width:100%;box-sizing:border-box;border-radius:10px;border:1px solid #29466e;background:#07111f;color:#e8f2ff;padding:10px}
+    button{border:0;border-radius:12px;background:#2d7dff;color:white;padding:10px 14px;margin-top:12px;font-weight:700}.muted{color:#91a8c6;font-size:14px}.warn{color:#ffd38b}.ok{color:#9fffb5}
+    .wide{grid-column:1/-1}.section-title{font-size:20px;margin-bottom:8px}.small{font-size:12px;color:#87a0bf}pre{white-space:pre-wrap;background:#06101d;border-radius:12px;padding:12px;border:1px solid #1c3558}
+  </style>
+</head>
+<body>
+<header>
+  <div style="float:right;min-width:220px"><label id="lbl_language">Language</label><select id="language" onchange="applyLang()"><option value="en">English</option><option value="es">Español</option><option value="pt">Português</option><option value="de">Deutsch</option></select></div>
+  <h1 id="product_name">StratProof Lab</h1>
+  <div class="tag" id="tagline">Autonomous strategy auditing before capital risk</div>
+  <div style="clear:both"></div>
+  <span class="pill" id="no_trading">Audit-only: no trading, no orders, no broker execution by default</span>
+  <span class="pill">Community / Pro / SaaS</span><span class="pill">AGPL + Commercial License</span>
+</header>
+<section class="grid">
+  <div class="card"><div class="section-title" id="nav_setup">Setup Department</div>
+    <label id="formula_version">Formula Version</label><select><option>V2.1</option><option>V2.4</option><option>V2.9</option><option>V3.1</option><option>V4.1</option><option>User Saved Formula</option></select>
+    <label id="score_threshold">Score Threshold</label><select><option>50</option><option>55</option><option>60</option><option selected>65</option><option>70</option><option>75</option><option>80</option></select>
+    <label id="timezone">Timezone</label><select><option>America/Guatemala</option><option>America/New_York</option><option>Europe/Madrid</option><option>UTC</option></select>
+  </div>
+  <div class="card"><div class="section-title" id="nav_data">Data Setup</div>
+    <label id="exchange">Exchange</label><select><option>Bybit</option><option>Binance</option><option>OKX</option><option>Coinbase</option><option>Kraken</option><option>CSV Import</option><option>CCXT</option><option>Interactive Brokers (Pro)</option><option>MT4/MT5 Import (Pro)</option></select>
+    <label id="market_type">Market Type</label><select><option>Crypto USDT Perpetual</option><option>Crypto Spot</option><option>Forex</option><option>Stocks</option><option>Futures</option><option>CSV Custom</option></select>
+    <label id="timeframe">Timeframe</label><select><option>1m</option><option selected>5m</option><option>15m</option><option>1h</option></select>
+    <button id="download_history">Download Market History</button>
+  </div>
+  <div class="card"><div class="section-title" id="idea_builder">Strategy Idea Builder</div>
+    <label>Side</label><select><option selected>LONG</option><option>SHORT</option><option>BOTH</option></select>
+    <label>Indicator</label><select><option>RSI 5m &lt; 35</option><option>RSI 5m &lt; 30</option><option>EMA cross</option><option>VWAP reclaim</option><option>ATR volatility filter</option></select>
+    <label>Market Context</label><select><option selected>BTC above EMA50 15m</option><option>BTC below EMA50 15m</option><option>BTC choppy</option><option>High liquidity sweep</option></select>
+    <label>Symbols</label><input value="SOLUSDT, ETHUSDT" />
+    <button id="save_idea">Save Current Idea</button> <button id="run_audit">Run Audit</button>
+  </div>
+  <div class="card"><div class="section-title" id="nav_university">Research University Idea Lab</div>
+    <p class="muted">Idea → Hypothesis → Data lineage → Chronological replay → Truth Engine → Net R / Drawdown → Department review → Evidence package.</p>
+    <pre>Example:
+LONG when RSI 5m &lt; 35, BTC &gt; EMA50 15m, volume &gt; 1.5x, score ≥ 65, SOL/ETH, New York Open.</pre>
+  </div>
+  <div class="card"><div class="section-title" id="nav_saved">Saved Ideas</div><p class="muted">Store formulas, version them, mark favorites, reload, compare, and rerun audits later.</p></div>
+  <div class="card"><div class="section-title" id="provider_layer">Provider Connector Layer</div><p class="muted">Crypto first: Bybit, Binance, OKX, Coinbase, Kraken, CSV, CCXT. Roadmap: MT4/MT5, IBKR, Polygon.io, Alpaca, Oanda/FXCM, FIX/FAST.</p></div>
+  <div class="card"><div class="section-title" id="nav_api">API Contribution Center</div><p class="muted">Optional user APIs enrich research only. No broker execution by default.</p></div>
+  <div class="card"><div class="section-title" id="community_pro">Community / Pro / SaaS Boundaries</div><p class="muted">Community: auditor core. Pro: advanced Research University. SaaS: premium brain runs server-side.</p></div>
+  <div class="card wide"><div class="section-title" id="nav_reports">Evidence Reports</div><p class="muted">Winrate honesty, TP-before-SL truth, duplicate/leakage warnings, Net R, drawdown, best/worst symbols and sessions.</p></div>
+</section>
+<script>
+const i18n = {"en": {"product_name": "StratProof Lab", "tagline": "Autonomous strategy auditing before capital risk", "nav_setup": "Setup Department", "nav_data": "Data Setup", "nav_university": "Research University Idea Lab", "nav_saved": "Saved Ideas", "nav_api": "API Contribution Center", "nav_reports": "Evidence Reports", "language": "Language", "run_audit": "Run Audit", "save_idea": "Save Current Idea", "download_history": "Download Market History", "exchange": "Exchange", "market_type": "Market Type", "symbol": "Symbol", "timeframe": "Timeframe", "history_range": "History Range", "timezone": "Timezone", "score_threshold": "Score Threshold", "formula_version": "Formula Version", "no_trading": "Audit-only: no trading, no orders, no broker execution by default", "idea_builder": "Strategy Idea Builder", "provider_layer": "Provider Connector Layer", "community_pro": "Community / Pro / SaaS Boundaries"}, "es": {"product_name": "StratProof Lab", "tagline": "Auditoría autónoma de estrategias antes de arriesgar capital", "nav_setup": "Departamento de Setup", "nav_data": "Setup de Datos", "nav_university": "Universidad de Investigación / Idea Lab", "nav_saved": "Biblioteca de Ideas Guardadas", "nav_api": "Centro de APIs para Investigación", "nav_reports": "Reportes de Evidencia", "language": "Idioma", "run_audit": "Ejecutar Auditoría", "save_idea": "Guardar Idea Actual", "download_history": "Descargar Histórico de Mercado", "exchange": "Exchange", "market_type": "Tipo de Mercado", "symbol": "Símbolo", "timeframe": "Timeframe", "history_range": "Rango Histórico", "timezone": "Zona Horaria", "score_threshold": "Score Mínimo", "formula_version": "Versión de Fórmula", "no_trading": "Solo auditoría: sin trading, sin órdenes y sin ejecución de broker por defecto", "idea_builder": "Constructor Visual de Ideas", "provider_layer": "Capa de Conectores de Datos", "community_pro": "Límites Community / Pro / SaaS"}, "pt": {"product_name": "StratProof Lab", "tagline": "Auditoria autônoma de estratégias antes de arriscar capital", "nav_setup": "Departamento de Configuração", "nav_data": "Configuração de Dados", "nav_university": "Universidade de Pesquisa / Idea Lab", "nav_saved": "Biblioteca de Ideias Salvas", "nav_api": "Centro de APIs para Pesquisa", "nav_reports": "Relatórios de Evidência", "language": "Idioma", "run_audit": "Executar Auditoria", "save_idea": "Salvar Ideia Atual", "download_history": "Baixar Histórico de Mercado", "exchange": "Exchange / Corretora", "market_type": "Tipo de Mercado", "symbol": "Símbolo", "timeframe": "Timeframe", "history_range": "Período Histórico", "timezone": "Fuso Horário", "score_threshold": "Score Mínimo", "formula_version": "Versão da Fórmula", "no_trading": "Somente auditoria: sem trading, sem ordens e sem execução de corretora por padrão", "idea_builder": "Construtor Visual de Ideias", "provider_layer": "Camada de Conectores de Dados", "community_pro": "Limites Community / Pro / SaaS"}, "de": {"product_name": "StratProof Lab", "tagline": "Autonome Strategieprüfung, bevor Kapital riskiert wird", "nav_setup": "Setup-Abteilung", "nav_data": "Daten-Setup", "nav_university": "Research University / Idea Lab", "nav_saved": "Gespeicherte Ideen", "nav_api": "API-Zentrum für Forschung", "nav_reports": "Evidenzberichte", "language": "Sprache", "run_audit": "Audit starten", "save_idea": "Aktuelle Idee speichern", "download_history": "Marktdaten-Historie herunterladen", "exchange": "Börse / Broker", "market_type": "Markttyp", "symbol": "Symbol", "timeframe": "Zeitrahmen", "history_range": "Historischer Zeitraum", "timezone": "Zeitzone", "score_threshold": "Mindest-Score", "formula_version": "Formelversion", "no_trading": "Nur Audit: standardmäßig kein Trading, keine Orders, keine Broker-Ausführung", "idea_builder": "Visueller Strategie-Ideen-Builder", "provider_layer": "Datenanbieter-Connector-Schicht", "community_pro": "Community / Pro / SaaS Grenzen"}};
+function applyLang(){const lang=document.getElementById('language').value; const t=i18n[lang]||i18n.en; for(const [k,v] of Object.entries(t)){const el=document.getElementById(k); if(el) el.textContent=v;} localStorage.setItem('stratproof_lang',lang)}
+document.getElementById('language').value=localStorage.getItem('stratproof_lang')||'en'; applyLang();
+</script>
+</body>
+</html>

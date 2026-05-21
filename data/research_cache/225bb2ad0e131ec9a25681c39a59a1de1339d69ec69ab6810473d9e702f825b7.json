@@ -1,0 +1,62 @@
+{
+  "idea_hash": "225bb2ad0e131ec9a25681c39a59a1de1339d69ec69ab6810473d9e702f825b7",
+  "dataset_fingerprint": "084dfb631cd71aa4bc16559d1c35e0bfcc42f85bf24b35b53dd4f57c314a48df",
+  "generated_ts": 1779387179,
+  "status": "COMPLETE_AUDIT_ONLY",
+  "title": "RSI oversold + BTC EMA50 + relative volume",
+  "provider": "bybit",
+  "market_type": "linear",
+  "timeframe": "5m",
+  "timezone": "America/New_York",
+  "session": "NEW_YORK_OPEN",
+  "symbols": [
+    "SOLUSDT",
+    "ETHUSDT"
+  ],
+  "overall": {
+    "known": 0,
+    "wins": 0,
+    "losses": 0,
+    "winrate_pct": 0.0,
+    "net_r_simple": 0.0,
+    "signals_total": 0,
+    "ambiguous": 0,
+    "no_touch": 0,
+    "duplicate_rate_pct": 0.0,
+    "verdict": "NEEDS_MORE_DATA"
+  },
+  "symbol_results": [
+    {
+      "symbol": "SOLUSDT",
+      "side": "LONG",
+      "known": 0,
+      "wins": 0,
+      "losses": 0,
+      "ambiguous": 0,
+      "no_touch": 0,
+      "winrate_pct": 0.0,
+      "net_r_simple": 0.0,
+      "max_drawdown_r": 0.0,
+      "profit_factor": null,
+      "duplicate_rate_pct": 0.0,
+      "verdict": "NEEDS_MORE_DATA"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "side": "LONG",
+      "known": 0,
+      "wins": 0,
+      "losses": 0,
+      "ambiguous": 0,
+      "no_touch": 0,
+      "winrate_pct": 0.0,
+      "net_r_simple": 0.0,
+      "max_drawdown_r": 0.0,
+      "profit_factor": null,
+      "duplicate_rate_pct": 0.0,
+      "verdict": "NEEDS_MORE_DATA"
+    }
+  ],
+  "warnings": [],
+  "report_markdown": "# StratProof Lab Idea Audit Report\n\n**Idea:** RSI oversold + BTC EMA50 + relative volume\n**Status:** COMPLETE_AUDIT_ONLY\n**Verdict:** NEEDS_MORE_DATA\n**Generated UTC:** 2026-05-21T18:12:59+00:00\n\n## Configuration\n- Provider: `bybit`\n- Market type: `linear`\n- Symbols: `SOLUSDT, ETHUSDT`\n- Timeframe: `5m`\n- Timezone: `America/New_York`\n- Session: `NEW_YORK_OPEN`\n- Side: `LONG`\n- Score threshold: `50`\n\n## Overall Results\n- Known outcomes: **0**\n- Wins: **0**\n- Losses: **0**\n- Winrate: **0.0%**\n- Net R simple: **0.0**\n- Duplicate rate: **0.0%**\n\n## Symbol Results\n| Symbol | Side | Known | Wins | Losses | WR % | Net R | Max DD | Verdict |\n|---|---:|---:|---:|---:|---:|---:|---:|---|\n| SOLUSDT | LONG | 0 | 0 | 0 | 0.0 | 0.0 | 0.0 | NEEDS_MORE_DATA |\n| ETHUSDT | LONG | 0 | 0 | 0 | 0.0 | 0.0 | 0.0 | NEEDS_MORE_DATA |\n\n## Warnings\n- None\n\n## Safety\nThis report is audit-only. It validates evidence and does not execute broker actions.\n"
+}

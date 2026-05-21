@@ -1,0 +1,108 @@
+{
+  "idea_hash": "68840d00be024b83700b98e9d6c6e52d6556aae5733edd1081cd833aa4a07b6f",
+  "dataset_fingerprint": "dd33b9fd75fa8af7c4f9a45fa65045da43884d0b5712b2facbaa09a7a1809490",
+  "generated_ts": 1779394524,
+  "status": "COMPLETE_AUDIT_ONLY",
+  "title": "bad duplicate test",
+  "provider": "bybit",
+  "market_type": "linear",
+  "timeframe": "5m",
+  "timezone": "America/New_York",
+  "session": "ALL",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "SOLUSDT",
+    "BNBUSDT"
+  ],
+  "overall": {
+    "known": 0,
+    "wins": 0,
+    "losses": 0,
+    "winrate_pct": 0.0,
+    "net_r_simple": 0.0,
+    "signals_total": 0,
+    "ambiguous": 0,
+    "no_touch": 0,
+    "duplicate_rate_pct": 0.0,
+    "verdict": "NEEDS_MORE_DATA",
+    "sample_diagnostics": {
+      "known": 0,
+      "signals_total": 0,
+      "no_touch": 0,
+      "minimum_preferred_known": 30,
+      "sample_status": "INSUFFICIENT_SAMPLE",
+      "reasons": [
+        "No candles matched every active formula block inside the selected session/window."
+      ],
+      "recommended_next_tests": [
+        "Try RSI < 40 or RSI < 45 as a discovery probe; keep the strict RSI version as the final validation candidate.",
+        "Use relaxed audit only for discovery; final promotion should rerun the original strict formula."
+      ]
+    }
+  },
+  "symbol_results": [
+    {
+      "symbol": "BTCUSDT",
+      "side": "SHORT",
+      "known": 0,
+      "wins": 0,
+      "losses": 0,
+      "ambiguous": 0,
+      "no_touch": 0,
+      "winrate_pct": 0.0,
+      "net_r_simple": 0.0,
+      "max_drawdown_r": 0.0,
+      "profit_factor": null,
+      "duplicate_rate_pct": 0.0,
+      "verdict": "NEEDS_MORE_DATA"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "side": "SHORT",
+      "known": 0,
+      "wins": 0,
+      "losses": 0,
+      "ambiguous": 0,
+      "no_touch": 0,
+      "winrate_pct": 0.0,
+      "net_r_simple": 0.0,
+      "max_drawdown_r": 0.0,
+      "profit_factor": null,
+      "duplicate_rate_pct": 0.0,
+      "verdict": "NEEDS_MORE_DATA"
+    },
+    {
+      "symbol": "SOLUSDT",
+      "side": "SHORT",
+      "known": 0,
+      "wins": 0,
+      "losses": 0,
+      "ambiguous": 0,
+      "no_touch": 0,
+      "winrate_pct": 0.0,
+      "net_r_simple": 0.0,
+      "max_drawdown_r": 0.0,
+      "profit_factor": null,
+      "duplicate_rate_pct": 0.0,
+      "verdict": "NEEDS_MORE_DATA"
+    },
+    {
+      "symbol": "BNBUSDT",
+      "side": "SHORT",
+      "known": 0,
+      "wins": 0,
+      "losses": 0,
+      "ambiguous": 0,
+      "no_touch": 0,
+      "winrate_pct": 0.0,
+      "net_r_simple": 0.0,
+      "max_drawdown_r": 0.0,
+      "profit_factor": null,
+      "duplicate_rate_pct": 0.0,
+      "verdict": "NEEDS_MORE_DATA"
+    }
+  ],
+  "warnings": [],
+  "report_markdown": "# StratProof Lab Idea Audit Report\n\n**Idea:** bad duplicate test\n**Status:** COMPLETE_AUDIT_ONLY\n**Verdict:** NEEDS_MORE_DATA\n**Generated UTC:** 2026-05-21T20:15:24+00:00\n\n## Configuration\n- Provider: `bybit`\n- Market type: `linear`\n- Symbols: `BTCUSDT, ETHUSDT, SOLUSDT, BNBUSDT`\n- Timeframe: `5m`\n- Timezone: `America/New_York`\n- Session: `ALL`\n- Side: `SHORT`\n- Score threshold: `50`\n\n## Overall Results\n- Known outcomes: **0**\n- Wins: **0**\n- Losses: **0**\n- Winrate: **0.0%**\n- Net R simple: **0.0**\n- Duplicate rate: **0.0%**\n\n## Symbol Results\n| Symbol | Side | Known | Wins | Losses | WR % | Net R | Max DD | Verdict |\n|---|---:|---:|---:|---:|---:|---:|---:|---|\n| BTCUSDT | SHORT | 0 | 0 | 0 | 0.0 | 0.0 | 0.0 | NEEDS_MORE_DATA |\n| ETHUSDT | SHORT | 0 | 0 | 0 | 0.0 | 0.0 | 0.0 | NEEDS_MORE_DATA |\n| SOLUSDT | SHORT | 0 | 0 | 0 | 0.0 | 0.0 | 0.0 | NEEDS_MORE_DATA |\n| BNBUSDT | SHORT | 0 | 0 | 0 | 0.0 | 0.0 | 0.0 | NEEDS_MORE_DATA |\n\n## Why this report needs more data\n- No candles matched every active formula block inside the selected session/window.\n\n## Next recommended tests\n- Try RSI < 40 or RSI < 45 as a discovery probe; keep the strict RSI version as the final validation candidate.\n- Use relaxed audit only for discovery; final promotion should rerun the original strict formula.\n\n## Warnings\n- None\n\n## Safety\nThis report is audit-only. It validates evidence and does not execute broker actions.\n"
+}

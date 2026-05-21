@@ -1,0 +1,69 @@
+{
+  "currency": "USD",
+  "annual_discount_standard_pct": 15,
+  "founding_member_annual_discount_pct": 40,
+  "founding_member_slots": 100,
+  "founding_member_note": "Planned first-100 annual subscriber offer; no active checkout in the public repository.",
+  "plans": [
+    {
+      "id": "community",
+      "name": "Community",
+      "price_monthly": 0,
+      "price_yearly_standard": 0,
+      "price_yearly_founding": 0,
+      "target": "Open-source users",
+      "billing": "free",
+      "summary": "AGPL community edition for auditing ideas with demo workflows and public connectors."
+    },
+    {
+      "id": "pro_early_access",
+      "name": "Pro Early Access",
+      "price_monthly": 29,
+      "price_yearly_list": 348,
+      "price_yearly_standard": 295,
+      "price_yearly_founding": 209,
+      "target": "Serious individual traders",
+      "billing": "card or crypto invoice",
+      "summary": "Advanced evidence reports, persistent research workflow, and early Pro capabilities."
+    },
+    {
+      "id": "pro_plus",
+      "name": "Pro Plus",
+      "price_monthly": 79,
+      "price_yearly_list": 948,
+      "price_yearly_standard": 805,
+      "price_yearly_founding": 569,
+      "target": "Power users",
+      "billing": "card or crypto invoice",
+      "summary": "Batch audits, multi-market imports, and advanced quality gates."
+    },
+    {
+      "id": "team",
+      "name": "Team",
+      "price_monthly": 199,
+      "price_yearly_list": 2388,
+      "price_yearly_standard": 2030,
+      "price_yearly_founding": 1433,
+      "target": "Communities, academies, small teams",
+      "billing": "card, invoice, or crypto invoice",
+      "summary": "Shared workspace, branded reports, roles, and team strategy libraries."
+    },
+    {
+      "id": "enterprise",
+      "name": "Enterprise / SaaS",
+      "price_monthly_from": 999,
+      "price_yearly_standard": "custom",
+      "price_yearly_founding": "custom",
+      "target": "Firms, prop teams, brokers, funds",
+      "billing": "contract / invoice / stablecoin option",
+      "summary": "Private deployment, white-label, premium connectors, custom data pipelines, and support."
+    }
+  ],
+  "payment_principle": "Card-first for trust. Crypto-ready for global traders.",
+  "not_sold": [
+    "signals",
+    "guaranteed returns",
+    "managed trading",
+    "financial advice"
+  ]
+}

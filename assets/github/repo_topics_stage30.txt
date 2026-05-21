@@ -1,0 +1,15 @@
+trading
+backtesting
+quant
+crypto
+strategy-audit
+algorithmic-trading
+risk-management
+technical-analysis
+trading-strategies
+open-source
+python
+research
+finance
+market-data
+agpl

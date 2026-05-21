@@ -1,0 +1,101 @@
+{
+  "generated_ts": 1779368482,
+  "product": "StratProof Lab",
+  "mode": "VISUAL_OBSERVABILITY_ONLY",
+  "audit_health_score": 33.3,
+  "evidence_score": 65.8,
+  "truth_confidence": 50.0,
+  "duplicate_risk": "UNKNOWN",
+  "leakage_risk": "CONTROLLED_RESEARCH_ONLY",
+  "departments": [
+    {
+      "key": "setup",
+      "label": "Setup Department",
+      "status": "DEMO",
+      "confidence": 0.8,
+      "summary": "Demo mode: configure audits without live data.",
+      "rows_seen": 0
+    },
+    {
+      "key": "data",
+      "label": "Data Setup Department",
+      "status": "DEMO",
+      "confidence": 0.74,
+      "summary": "Connect Bybit/Binance/CSV to build a dataset.",
+      "rows_seen": 0
+    },
+    {
+      "key": "idea_lab",
+      "label": "Research University Idea Lab",
+      "status": "DEMO",
+      "confidence": 0.7,
+      "summary": "Submit ideas to generate hypotheses.",
+      "rows_seen": 0
+    },
+    {
+      "key": "truth",
+      "label": "Truth Engine",
+      "status": "WAIT",
+      "confidence": 0.5,
+      "summary": "Waiting for OHLCV and signals.",
+      "rows_seen": 0
+    },
+    {
+      "key": "risk",
+      "label": "RiskGuard / Net R",
+      "status": "WAIT",
+      "confidence": 0.5,
+      "summary": "Waiting for audit results.",
+      "rows_seen": 0
+    },
+    {
+      "key": "formula",
+      "label": "Formula Registry",
+      "status": "READY",
+      "confidence": 0.68,
+      "summary": "Formula versions can be compared.",
+      "rows_seen": 0
+    },
+    {
+      "key": "quality",
+      "label": "Quality Gate",
+      "status": "READY",
+      "confidence": 0.66,
+      "summary": "Anticlustering and duplicate checks available.",
+      "rows_seen": 0
+    },
+    {
+      "key": "evidence",
+      "label": "Evidence Reports",
+      "status": "READY",
+      "confidence": 0.64,
+      "summary": "Evidence packages can be generated.",
+      "rows_seen": 0
+    },
+    {
+      "key": "api",
+      "label": "API Contribution Center",
+      "status": "LOCKED",
+      "confidence": 0.7,
+      "summary": "Research-only API references.",
+      "rows_seen": 0
+    }
+  ],
+  "activity_feed": [
+    "Demo mode active. Visual observability only; no execution actions.",
+    "Connect market data to activate the Research Brain.",
+    "Submit a strategy idea to route it through the University."
+  ],
+  "metrics": {
+    "candidate_signals": 0,
+    "outcomes": 0,
+    "ideas_submitted": 0,
+    "agent_actions": 0,
+    "chief_decisions": 0,
+    "quality_rows": 0,
+    "recent_candidates_24h": 0,
+    "truth_engine_runs": 0,
+    "net_r_runs": 0,
+    "formula_runs": 0
+  }
+}

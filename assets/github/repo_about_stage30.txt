@@ -1,0 +1,1 @@
+Evidence engine for trading strategies — audit ideas, detect weak backtests, and generate research reports before risking capital.

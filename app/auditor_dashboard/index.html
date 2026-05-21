@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>StratProof Lab — Visual Demo Launcher</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg:#07111f; --panel:#0d1b2d; --panel2:#10233a; --line:#213a5b;
+      --text:#edf6ff; --muted:#9fb5ce; --accent:#7dd3fc; --green:#86efac; --gold:#fde68a;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:
+      radial-gradient(circle at 18% 0%, rgba(125,211,252,.18), transparent 32%),
+      radial-gradient(circle at 80% 12%, rgba(134,239,172,.12), transparent 34%),
+      linear-gradient(135deg,#050a13,#07111f 45%,#081524);
+      font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text)}
+    .shell{max-width:1180px;margin:0 auto;padding:42px 24px 64px}
+    .hero{border:1px solid var(--line);border-radius:28px;padding:34px;background:rgba(13,27,45,.78);box-shadow:0 24px 70px rgba(0,0,0,.35)}
+    .eyebrow{display:inline-flex;gap:8px;align-items:center;padding:8px 12px;border:1px solid rgba(125,211,252,.35);border-radius:999px;color:var(--accent);font-size:13px;background:rgba(125,211,252,.08)}
+    h1{font-size:44px;line-height:1.03;margin:18px 0 14px;letter-spacing:-1.2px}
+    p{color:var(--muted);font-size:16px;line-height:1.65;max-width:780px}
+    .tag{color:var(--green);font-weight:800}
+    .grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px;margin-top:26px}
+    .card{border:1px solid var(--line);border-radius:22px;padding:22px;background:linear-gradient(180deg,rgba(16,35,58,.9),rgba(10,22,38,.9));text-decoration:none;color:inherit;min-height:220px;transition:.18s ease;position:relative;overflow:hidden}
+    .card:hover{transform:translateY(-3px);border-color:rgba(125,211,252,.65);box-shadow:0 18px 42px rgba(0,0,0,.25)}
+    .card:before{content:"";position:absolute;inset:0 0 auto 0;height:3px;background:linear-gradient(90deg,var(--accent),var(--green));opacity:.9}
+    .num{font-size:12px;color:var(--accent);font-weight:800;letter-spacing:.14em;text-transform:uppercase}
+    h2{margin:12px 0 10px;font-size:22px}
+    .card p{font-size:14px;margin:0}
+    .meta{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+    .chip{border:1px solid rgba(159,181,206,.25);border-radius:999px;padding:6px 9px;font-size:12px;color:#c9d8ea;background:rgba(255,255,255,.03)}
+    .wide{grid-column:span 4;display:grid;grid-template-columns:1.2fr .8fr;gap:18px;align-items:center}
+    .panel{border:1px dashed rgba(125,211,252,.35);border-radius:18px;padding:18px;background:rgba(0,0,0,.14)}
+    code{color:#d9f99d}
+    .footer{margin-top:22px;color:var(--muted);font-size:13px}
+    @media(max-width:1100px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.wide{grid-column:span 2}}@media(max-width:860px){.grid{grid-template-columns:1fr}.wide{grid-column:span 1;grid-template-columns:1fr}h1{font-size:34px}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <section class="hero">
+      <div class="eyebrow">StratProof Lab Community Preview · Audit-only by design</div>
+      <h1>Audit trading ideas before they become expensive mistakes.</h1>
+      <p>
+        StratProof Lab is an <span class="tag">evidence engine for trading strategies</span>.
+        This launcher opens the public demo screens included in the Community package:
+        build a formula visually, inspect evidence cards, and see the Research Brain View.
+      </p>
+      <div class="grid">
+        <a class="card" href="./local_workbench.html">
+          <div class="num">00 · Full Local Test</div>
+          <h2>Local Workbench</h2>
+          <p>Build formulas, download public market data, run real local audits, compare thresholds, and save ideas.</p>
+          <div class="meta"><span class="chip">Interactive</span><span class="chip">Local audit</span></div>
+        </a>
+        <a class="card" href="./formula_builder_ui.html">
+          <div class="num">01 · Idea Lab</div>
+          <h2>Formula Builder UI</h2>
+          <p>Create strategy hypotheses with visual blocks like RSI, BTC EMA context, relative volume, sessions, and score thresholds.</p>
+          <div class="meta"><span class="chip">No-code idea builder</span><span class="chip">Multilingual</span></div>
+        </a>
+        <a class="card" href="./evidence_report_builder_ui.html">
+          <div class="num">02 · Evidence</div>
+          <h2>Evidence Report Cards</h2>
+          <p>Turn audit JSON into client-ready cards: verdict, honest winrate, Net R, drawdown, duplicate risk, and leakage risk.</p>
+          <div class="meta"><span class="chip">Evidence Score</span><span class="chip">Quality Gate</span></div>
+        </a>
+        <a class="card" href="./research_brain_view.html">
+          <div class="num">03 · Visual Observatory</div>
+          <h2>Research Brain View</h2>
+          <p>A cinematic observability screen showing how ideas move through Research University, Truth, Risk, Quality, and Providers.</p>
+          <div class="meta"><span class="chip">Not a trading screen</span><span class="chip">Audit topology</span></div>
+        </a>
+        <div class="card wide">
+          <div>
+            <div class="num">Recommended local demo</div>
+            <h2>One command proof</h2>
+            <p>After opening these screens, run the public demo to generate audit reports and evidence outputs locally.</p>
+          </div>
+          <div class="panel">
+            <code>python3 scripts/run_public_demo.py</code>
+            <p class="footer">Then open <code>reports/public_demo/DEMO_INDEX.md</code>.</p>
+          </div>
+        </div>
+      </div>
+      <p class="footer">
+        Community package: no broker execution by default, no managed accounts, no guaranteed returns, no financial advice.
+      </p>
+    </section>
+  </main>
+</body>
+</html>

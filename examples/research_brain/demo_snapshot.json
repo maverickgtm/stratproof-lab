@@ -1,0 +1,38 @@
+{
+  "generated_ts": 1779320000,
+  "product": "StratProof Lab",
+  "mode": "VISUAL_OBSERVABILITY_ONLY",
+  "audit_health_score": 82.4,
+  "evidence_score": 91.0,
+  "truth_confidence": 98.0,
+  "duplicate_risk": "WATCH",
+  "leakage_risk": "CONTROLLED_RESEARCH_ONLY",
+  "metrics": {
+    "ideas_audited_today": 24,
+    "promising_ideas": 5,
+    "rejected_ideas": 11,
+    "need_more_data": 8,
+    "evidence_reports": 14,
+    "quality_gate_blocks": 37,
+    "truth_engine_runs": 12,
+    "formula_versions_competing": 6
+  },
+  "activity_feed": [
+    "Research University accepted idea: RSI + BTC EMA + volume filter.",
+    "Truth Engine replay completed for SOLUSDT and ETHUSDT.",
+    "RiskGuard rejected ETHUSDT branch; SOLUSDT remains promising.",
+    "Evidence package generated in English and Spanish.",
+    "Execution disabled: observability and audit-only mode."
+  ],
+  "departments": [
+    {"key":"setup","label":"Setup Department","status":"READY","confidence":0.92,"summary":"Timezone, language, formula and score threshold ready.","rows_seen":0},
+    {"key":"data","label":"Data Setup Department","status":"SYNC","confidence":0.88,"summary":"Bybit/Binance/CSV provider layer prepared.","rows_seen":30439},
+    {"key":"idea_lab","label":"Research University Idea Lab","status":"ACTIVE","confidence":0.84,"summary":"Strategy ideas can be transformed into hypotheses.","rows_seen":24},
+    {"key":"truth","label":"Truth Engine","status":"ACTIVE","confidence":0.98,"summary":"Chronological TP/SL checks verified.","rows_seen":300},
+    {"key":"risk","label":"RiskGuard / Net R","status":"ACTIVE","confidence":0.86,"summary":"Drawdown, expectancy and veto checks running.","rows_seen":12},
+    {"key":"formula","label":"Formula Registry","status":"COMPETING","confidence":0.81,"summary":"V2.4, V3.1, V4.1 and user formulas under comparison.","rows_seen":6},
+    {"key":"quality","label":"Quality Gate","status":"ACTIVE","confidence":0.90,"summary":"Duplicate, clustering and leakage checks active.","rows_seen":37},
+    {"key":"evidence","label":"Evidence Reports","status":"READY","confidence":0.79,"summary":"Reports ready for export.","rows_seen":14},
+    {"key":"api","label":"API Contribution Center","status":"LOCKED","confidence":0.75,"summary":"Research-only API references, no execution permissions.","rows_seen":0}
+  ]
+}

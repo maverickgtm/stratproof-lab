@@ -1,0 +1,37 @@
+{
+  "name": "RSI oversold + BTC EMA50 + relative volume",
+  "side": "LONG",
+  "exchange": "bybit",
+  "market_type": "linear",
+  "symbols": [
+    "SOLUSDT",
+    "ETHUSDT"
+  ],
+  "timeframe": "5m",
+  "date_range": "30d",
+  "timezone": "America/New_York",
+  "session": "NEW_YORK_OPEN",
+  "score_threshold": 65,
+  "blocks": [
+    {
+      "indicator": "RSI",
+      "timeframe": "5m",
+      "operator": "<",
+      "value": 35
+    },
+    {
+      "indicator": "BTC_EMA",
+      "symbol": "BTCUSDT",
+      "timeframe": "15m",
+      "operator": "price_above",
+      "period": 50
+    },
+    {
+      "indicator": "RELATIVE_VOLUME",
+      "timeframe": "5m",
+      "operator": ">",
+      "multiplier": 1.5,
+      "lookback": 20
+    }
+  ]
+}

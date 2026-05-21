@@ -1,0 +1,76 @@
+{
+  "idea_hash": "59aed1deb04ac35cea162dde1a87a22eea004ae2a89b5891998121fbbe35d95f",
+  "dataset_fingerprint": "20177d52271c1ce6b4d7bfe3aa6b297156ac468b84c437bf7ce392750fa535ae",
+  "generated_ts": 1779390873,
+  "status": "COMPLETE_AUDIT_ONLY",
+  "title": "RSI oversold + BTC EMA50 + relative volume — relaxed discovery probe",
+  "provider": "bybit",
+  "market_type": "linear",
+  "timeframe": "5m",
+  "timezone": "America/New_York",
+  "session": "ALL",
+  "symbols": [
+    "SOLUSDT",
+    "ETHUSDT"
+  ],
+  "overall": {
+    "known": 78,
+    "wins": 19,
+    "losses": 59,
+    "winrate_pct": 24.36,
+    "net_r_simple": -40.0,
+    "signals_total": 81,
+    "ambiguous": 3,
+    "no_touch": 0,
+    "duplicate_rate_pct": 0.0,
+    "verdict": "NOT_READY_RESEARCH_ONLY",
+    "sample_diagnostics": {
+      "known": 78,
+      "signals_total": 81,
+      "no_touch": 0,
+      "minimum_preferred_known": 30,
+      "sample_status": "ENOUGH_FOR_INITIAL_REVIEW",
+      "reasons": [
+        "Evidence sample is below the preferred review threshold."
+      ],
+      "recommended_next_tests": [
+        "Add more symbols or extend history to 60–90 days for a broader evidence check.",
+        "Use relaxed audit only for discovery; final promotion should rerun the original strict formula."
+      ]
+    }
+  },
+  "symbol_results": [
+    {
+      "symbol": "SOLUSDT",
+      "side": "LONG",
+      "known": 38,
+      "wins": 9,
+      "losses": 29,
+      "ambiguous": 2,
+      "no_touch": 0,
+      "winrate_pct": 23.68,
+      "net_r_simple": -20.0,
+      "max_drawdown_r": -23.0,
+      "profit_factor": 0.3103,
+      "duplicate_rate_pct": 0.0,
+      "verdict": "NOT_READY_RESEARCH_ONLY"
+    },
+    {
+      "symbol": "ETHUSDT",
+      "side": "LONG",
+      "known": 40,
+      "wins": 10,
+      "losses": 30,
+      "ambiguous": 1,
+      "no_touch": 0,
+      "winrate_pct": 25.0,
+      "net_r_simple": -20.0,
+      "max_drawdown_r": -24.0,
+      "profit_factor": 0.3333,
+      "duplicate_rate_pct": 0.0,
+      "verdict": "NOT_READY_RESEARCH_ONLY"
+    }
+  ],
+  "warnings": [],
+  "report_markdown": "# StratProof Lab Idea Audit Report\n\n**Idea:** RSI oversold + BTC EMA50 + relative volume — relaxed discovery probe\n**Status:** COMPLETE_AUDIT_ONLY\n**Verdict:** NOT_READY_RESEARCH_ONLY\n**Generated UTC:** 2026-05-21T19:14:33+00:00\n\n## Configuration\n- Provider: `bybit`\n- Market type: `linear`\n- Symbols: `SOLUSDT, ETHUSDT`\n- Timeframe: `5m`\n- Timezone: `America/New_York`\n- Session: `ALL`\n- Side: `LONG`\n- Score threshold: `50`\n\n## Overall Results\n- Known outcomes: **78**\n- Wins: **19**\n- Losses: **59**\n- Winrate: **24.36%**\n- Net R simple: **-40.0**\n- Duplicate rate: **0.0%**\n\n## Symbol Results\n| Symbol | Side | Known | Wins | Losses | WR % | Net R | Max DD | Verdict |\n|---|---:|---:|---:|---:|---:|---:|---:|---|\n| SOLUSDT | LONG | 38 | 9 | 29 | 23.68 | -20.0 | -23.0 | NOT_READY_RESEARCH_ONLY |\n| ETHUSDT | LONG | 40 | 10 | 30 | 25.0 | -20.0 | -24.0 | NOT_READY_RESEARCH_ONLY |\n\n## Warnings\n- None\n\n## Safety\nThis report is audit-only. It validates evidence and does not execute broker actions.\n"
+}

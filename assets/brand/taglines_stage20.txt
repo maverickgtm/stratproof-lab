@@ -1,0 +1,6 @@
+Most trading strategies look good — until they are audited.
+Stop trusting pretty backtests. Demand evidence.
+Audit the strategy before the market audits your capital.
+Other tools help you build strategies. StratProof helps you challenge them.
+An evidence engine for traders, quants, and trading teams.
+Crypto strategy auditor today. Multi-market evidence framework tomorrow.

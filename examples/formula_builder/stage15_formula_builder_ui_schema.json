@@ -1,0 +1,261 @@
+{
+  "stage": "15",
+  "product": "StratProof Lab",
+  "view": "Formula Builder UI Expansion",
+  "safety_model": {
+    "public_label": "Audit-only by design",
+    "default_execution": "disabled",
+    "description": "The builder creates research ideas and evidence reports, not live broker orders."
+  },
+  "supported_languages": [
+    "en",
+    "es",
+    "pt",
+    "de"
+  ],
+  "block_groups": {
+    "momentum": [
+      {
+        "key": "rsi_threshold",
+        "label": "RSI Threshold",
+        "family": "momentum",
+        "description": "RSI below/above a threshold.",
+        "parameters": {
+          "period": 14,
+          "operator": "<",
+          "threshold": 35
+        },
+        "output_type": "boolean",
+        "audit_notes": "Useful for oversold/overbought hypotheses; must be checked per symbol and regime."
+      },
+      {
+        "key": "macd_cross",
+        "label": "MACD Cross",
+        "family": "momentum",
+        "description": "MACD line crossing signal line.",
+        "parameters": {
+          "fast": 12,
+          "slow": 26,
+          "signal": 9,
+          "direction": "bullish"
+        },
+        "output_type": "event",
+        "audit_notes": "Event-based block; requires chronological replay to avoid look-ahead."
+      }
+    ],
+    "trend": [
+      {
+        "key": "ema_trend",
+        "label": "EMA Trend Filter",
+        "family": "trend",
+        "description": "Price or context market above/below EMA.",
+        "parameters": {
+          "period": 50,
+          "timeframe": "15m",
+          "operator": ">"
+        },
+        "output_type": "boolean",
+        "audit_notes": "Good for BTC context or local symbol trend alignment."
+      }
+    ],
+    "structure": [
+      {
+        "key": "vwap_position",
+        "label": "VWAP Position",
+        "family": "structure",
+        "description": "Close above/below session VWAP.",
+        "parameters": {
+          "operator": ">"
+        },
+        "output_type": "boolean",
+        "audit_notes": "Useful for intraday structure; session reset rules should be explicit."
+      }
+    ],
+    "risk": [
+      {
+        "key": "atr_risk",
+        "label": "ATR Risk Filter",
+        "family": "risk",
+        "description": "ATR percent below/above risk threshold.",
+        "parameters": {
+          "period": 14,
+          "max_atr_pct": 2.5
+        },
+        "output_type": "boolean",
+        "audit_notes": "Prevents testing formulas only during unusable volatility."
+      }
+    ],
+    "liquidity": [
+      {
+        "key": "relative_volume",
+        "label": "Relative Volume",
+        "family": "liquidity",
+        "description": "Current volume compared with rolling average.",
+        "parameters": {
+          "period": 20,
+          "operator": ">",
+          "threshold": 1.5
+        },
+        "output_type": "boolean",
+        "audit_notes": "Useful as liquidity/attention confirmation; weak on illiquid assets."
+      }
+    ],
+    "volatility": [
+      {
+        "key": "bollinger_position",
+        "label": "Bollinger Band Position",
+        "family": "volatility",
+        "description": "Close relative to Bollinger bands.",
+        "parameters": {
+          "period": 20,
+          "stddev": 2,
+          "position": "lower_band"
+        },
+        "output_type": "boolean",
+        "audit_notes": "Research-only block for mean reversion/volatility hypotheses."
+      }
+    ],
+    "time": [
+      {
+        "key": "session_filter",
+        "label": "Session Filter",
+        "family": "time",
+        "description": "Restrict replay to selected sessions/timezone.",
+        "parameters": {
+          "timezone": "America/New_York",
+          "session": "new_york_open"
+        },
+        "output_type": "boolean",
+        "audit_notes": "Important for comparing Asia/London/NY behavior."
+      }
+    ],
+    "quality": [
+      {
+        "key": "score_threshold",
+        "label": "Score Threshold Simulator",
+        "family": "quality",
+        "description": "Compare formula performance across score thresholds.",
+        "parameters": {
+          "thresholds": [
+            50,
+            55,
+            60,
+            65,
+            70,
+            75,
+            80
+          ]
+        },
+        "output_type": "comparison",
+        "audit_notes": "Simulator only; does not activate signals."
+      }
+    ],
+    "derivatives": [
+      {
+        "key": "funding_oi_placeholder",
+        "label": "Funding/OI Context Placeholder",
+        "family": "derivatives",
+        "description": "Optional derivatives context from user-provided APIs.",
+        "parameters": {
+          "provider": "coinglass_or_coinalyze",
+          "mode": "optional"
+        },
+        "output_type": "context",
+        "audit_notes": "Optional Pro/Enterprise enrichment; no raw secrets in repo."
+      }
+    ]
+  },
+  "presets": [
+    {
+      "preset_id": "crypto_pullback_with_btc_context",
+      "name": "Crypto pullback with BTC context",
+      "description": "RSI pullback + BTC trend + relative volume + session filter.",
+      "asset_class": "crypto",
+      "market_type": "perpetual_futures",
+      "timeframe": "5m",
+      "default_blocks": [
+        {
+          "type": "rsi",
+          "symbol_scope": "target",
+          "timeframe": "5m",
+          "operator": "<",
+          "value": 35
+        },
+        {
+          "type": "ema_trend",
+          "symbol": "BTCUSDT",
+          "timeframe": "15m",
+          "operator": "close_above_ema",
+          "period": 50
+        },
+        {
+          "type": "relative_volume",
+          "timeframe": "5m",
+          "operator": ">",
+          "value": 1.5
+        },
+        {
+          "type": "session_filter",
+          "timezone": "America/New_York",
+          "session": "new_york_open"
+        },
+        {
+          "type": "score_threshold",
+          "thresholds": [
+            50,
+            55,
+            60,
+            65,
+            70,
+            75,
+            80
+          ]
+        }
+      ],
+      "safety_scope": "audit_only_by_design"
+    },
+    {
+      "preset_id": "trend_continuation_audit",
+      "name": "Trend continuation audit",
+      "description": "EMA/VWAP alignment + ATR risk + score threshold comparison.",
+      "asset_class": "multi_asset",
+      "market_type": "imported_or_exchange_data",
+      "timeframe": "15m",
+      "default_blocks": [
+        {
+          "type": "ema_trend",
+          "timeframe": "15m",
+          "operator": "close_above_ema",
+          "period": 50
+        },
+        {
+          "type": "vwap",
+          "timeframe": "15m",
+          "operator": "close_above_vwap"
+        },
+        {
+          "type": "atr",
+          "timeframe": "15m",
+          "risk_mode": "avoid_extreme_volatility"
+        },
+        {
+          "type": "score_threshold",
+          "thresholds": [
+            55,
+            60,
+            65,
+            70,
+            75
+          ]
+        }
+      ],
+      "safety_scope": "audit_only_by_design"
+    }
+  ],
+  "output_contract": {
+    "builder_json": "Portable formula idea definition produced by the visual builder.",
+    "idea_hash": "Stable hash used by Research Cache.",
+    "research_status": "draft | queued_for_audit | audited | archived",
+    "next_step": "Send to Research University / run backtest / generate evidence report."
+  }
+}

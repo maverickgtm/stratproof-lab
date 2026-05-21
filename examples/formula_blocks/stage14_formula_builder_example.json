@@ -1,0 +1,54 @@
+{
+  "name": "RSI + BTC EMA + Relative Volume audit idea",
+  "public_safety_model": "Audit-only by design",
+  "blocks": [
+    {
+      "key": "rsi_threshold",
+      "symbol_scope": "target",
+      "timeframe": "5m",
+      "period": 14,
+      "operator": "<",
+      "threshold": 35
+    },
+    {
+      "key": "ema_trend",
+      "symbol_scope": "BTCUSDT",
+      "timeframe": "15m",
+      "period": 50,
+      "operator": ">"
+    },
+    {
+      "key": "relative_volume",
+      "symbol_scope": "target",
+      "timeframe": "5m",
+      "period": 20,
+      "operator": ">",
+      "threshold": 1.5
+    },
+    {
+      "key": "score_threshold",
+      "thresholds": [
+        50,
+        55,
+        60,
+        65,
+        70,
+        75,
+        80
+      ]
+    },
+    {
+      "key": "session_filter",
+      "timezone": "America/New_York",
+      "session": "new_york_open"
+    }
+  ],
+  "audit_outputs": [
+    "winrate_honest",
+    "net_r_simple",
+    "max_drawdown",
+    "duplicate_rate",
+    "leakage_warning",
+    "evidence_score"
+  ]
+}

@@ -1,0 +1,3 @@
+# Minimal community requirements
+# Core modules use the Python standard library.
+# Optional future additions may include pandas, numpy, fastapi, uvicorn.
