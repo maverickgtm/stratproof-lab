@@ -10,3 +10,9 @@ reports/**
 *.db
 *.tar.gz
 *.zip
+
+# StratProof local runtime/generated files
+data/research_cache/*.json
+data/local_workbench_ideas/*.json
+data/*.sqlite3-wal
+data/*.sqlite3-shm
