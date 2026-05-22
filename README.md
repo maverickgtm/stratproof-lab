@@ -24,7 +24,7 @@ StratProof Lab should feel different from a normal backtester. The product story
 This is the actual local Workbench flow: choose provider, configure symbols and timeframes, build a formula with visual blocks, run strict vs relaxed audits, and review the evidence guidance panel.
 
 <p align="center">
-  <img src="assets/github/screenshots/05_local_workbench_real_v3.png" alt="StratProof Lab Local Workbench real preview" width="100%">
+  <img src="assets/github/screenshots/05_local_workbench_real.png" alt="StratProof Lab Local Workbench real preview" width="100%">
 </p>
 
 ## Real Visual Evidence Report preview
