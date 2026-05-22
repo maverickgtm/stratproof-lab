@@ -20,7 +20,7 @@ StratProof Lab should feel different from a normal backtester. The product story
 
 ![Formula Builder UI](assets/github/screenshots/01_formula_builder_ui.png)
 
-![Evidence Report Cards](assets/github/screenshots/02_evidence_report_cards.png)
+![Evidence Report Cards](assets/github/screenshots/02_evidence_report_cards_v2.png)
 
 <p align="center">
   <img src="assets/github/screenshots/03_research_brain_view.png" alt="Research Brain View" width="100%">
