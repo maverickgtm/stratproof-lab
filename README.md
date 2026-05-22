@@ -22,9 +22,13 @@ StratProof Lab should feel different from a normal backtester. The product story
 
 ![Evidence Report Cards](assets/github/screenshots/02_evidence_report_cards.png)
 
-![Research Brain View](assets/github/screenshots/03_research_brain_view.png)
+<p align="center">
+  <img src="assets/github/screenshots/03_research_brain_view.png" alt="Research Brain View" width="100%">
+</p>
 
-![Provider Connector Layer](assets/github/screenshots/04_provider_connector_layer.png)
+<p align="center">
+  <img src="assets/github/screenshots/04_provider_connector_layer.png" alt="Provider Connector Layer" width="100%">
+</p>
 
 ---
 
