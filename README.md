@@ -18,6 +18,24 @@ It turns strategy ideas into testable hypotheses, runs chronological audits, cha
 
 StratProof Lab should feel different from a normal backtester. The product story is simple: build an idea, audit the evidence, inspect the quality gates, and understand how the research system reached its verdict.
 
+
+## Real Community Workbench preview
+
+This is the actual local Workbench flow: choose provider, configure symbols and timeframes, build a formula with visual blocks, run strict vs relaxed audits, and review the evidence guidance panel.
+
+<p align="center">
+  <img src="assets/github/screenshots/05_local_workbench_real.png" alt="StratProof Lab Local Workbench real preview" width="100%">
+</p>
+
+## Real Visual Evidence Report preview
+
+The visual report turns an audit result into a client-ready evidence view: known outcomes, honest winrate, Net R, configuration, symbol-level results, and research-only verdicts.
+
+<p align="center">
+  <img src="assets/github/screenshots/06_visual_evidence_report_real.png" alt="StratProof Lab Visual Evidence Report real preview" width="100%">
+</p>
+
+
 ![Formula Builder UI](assets/github/screenshots/01_formula_builder_ui.png)
 
 ![Evidence Report Cards](assets/github/screenshots/02_evidence_report_cards_v3.png)
