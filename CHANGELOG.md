@@ -14,6 +14,7 @@ All notable public changes to StratProof Lab will be documented here.
 - A redesigned Evidence Command Center interface that surfaces provenance, audit state and verification exports as the primary user workflow.
 - A one-click Quick Audit path with immediate operations-CSV verification and an optional hosted-demo daily export allowance.
 - An in-product TradingView Portfolio visual-cross-check guide and direct replay CSV action for compatible audit results.
+- A compact evidence-and-recipe entry flow with expandable advanced controls for assets, data inputs, formula blocks and portable JSON.
 
 ### Fixed
 

@@ -15,6 +15,7 @@ StratProof Lab v2 turns the Community Workbench into a multi-exchange evidence e
 - Quick Audit reduces the first-user path to one action for synthetic walkthroughs or one audit action after public history is loaded, with immediate operations-CSV access.
 - Hosted demos can opt into a visible daily CSV-download allowance while local Community keeps audit exports available without that quota.
 - Compatible `LONG` spot audits now surface a TradingView Portfolio replay button and guided visual cross-check workflow with explicit evidence limitations.
+- Data Setup and Formula Builder now default to a concise choose-and-run workflow, while preserving all technical controls in expandable advanced panels.
 - Evidence guidance now remains consistent when an audit exceeds its initial-review sample threshold.
 - CI now tests connector parsing and the duplicate-safe cache policy.
 

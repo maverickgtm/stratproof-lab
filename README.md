@@ -39,7 +39,7 @@ StratProof Lab should feel different from a normal backtester. The product story
 
 ## Evidence Command Center
 
-Community now opens into a premium-grade **Evidence Command Center**: select traceable inputs, adjust a visual formula and use **Quick Audit** to generate the result and its first CSV verification download without handling JSON manually. The premium interface is included in the free local Community release; a future hosted free demo can disclose a daily CSV allowance while paid plans focus on unlimited hosted exports, scale, collaboration and advanced workflows.
+Community now opens into a premium-grade **Evidence Command Center** built around a compact path: **choose evidence → choose a recipe → run audit → download verification**. Users see selected assets, recipe conditions and evidence actions first; provider controls, formula blocks, session settings, thresholds and portable JSON remain available in expandable advanced panels. The free local Community release includes the full interface, while a future hosted free demo can disclose a daily CSV allowance and paid plans can focus on unlimited hosted exports, scale and collaboration.
 
 <p align="center">
   <img src="assets/github/screenshots/05_local_workbench_real.png" alt="StratProof Lab Local Workbench real preview" width="100%">
@@ -372,7 +372,7 @@ Fastest workbench path:
 
 ```text
 1. Click Try demo + audit for an instant labeled synthetic walkthrough.
-2. Or load public history, adjust visual blocks and click Audit current formula + prepare CSV.
+2. Or load public history, select a recipe and click Run audit + prepare evidence.
 3. Download the operations CSV directly from the result panel.
 4. Use strict vs relaxed only when diagnosing sample starvation.
 ```
@@ -382,10 +382,10 @@ Local Community includes CSV downloads without a daily quota. A hosted read-only
 Important terminology:
 
 ```text
-Generate offline demo cache
+Try synthetic demo + audit
 = creates synthetic local demo candles. Use it to test the UI and workflow quickly.
 
-Download public history
+Load public candles
 = downloads real public completed candles from Bybit, Binance, OKX, Coinbase Exchange, or Kraken.
 ```
 

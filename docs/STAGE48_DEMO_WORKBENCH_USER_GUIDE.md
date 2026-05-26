@@ -24,7 +24,7 @@ Use it for:
 - checking that reports generate correctly
 - testing formulas without waiting for downloads
 
-### Download public history
+### Load public candles
 
 Use this when you want to audit against real public exchange candles.
 
@@ -59,8 +59,9 @@ python3 scripts/launch_local_workbench.py
    - This is the shortest path from an idea to inspectable replay detections.
    - If **Download TradingView replay CSV** appears, it can be imported into TradingView Portfolio for a visual cross-check of eligible replay entries and exits.
 
-3. When ready for real evidence, choose a live provider, click **Download public history**, adjust the formula and click **Audit current formula + prepare CSV**.
+3. When ready for real evidence, choose a live provider, click **Load public candles**, select a formula recipe and click **Run audit + prepare evidence**.
    - JSON is built automatically from the visual controls.
+   - Use **Change assets**, **Advanced data settings**, **Edit formula rules** or **Advanced validation & portable JSON** only when more control is needed.
 
 ### Detailed research path
 
@@ -83,8 +84,8 @@ Follow this order when deliberately modifying every input:
    - For stronger evidence, use more history when available.
 
 5. Load data.
-   - Click **Generate offline demo cache** for synthetic local data.
-   - Or click **Download public history** for real public candles.
+   - Click **Generate demo cache only** for synthetic local data.
+   - Or click **Load public candles** for real public candles.
 
 6. Build the formula.
    - Choose side: LONG or SHORT.
@@ -164,7 +165,13 @@ In that mode the dashboard displays how many free CSV downloads remain for the U
 
 ### Area 1 — Data Setup
 
-This area chooses data source, symbols, timeframe, history window, and download/cache method.
+This area starts with one compact evidence card showing the provider, market type, timeframe, range and selected assets. The primary action loads public candles; a synthetic one-click demonstration remains available separately.
+
+The detailed controls are intentionally collapsed:
+
+- **Change assets** opens common and custom symbols.
+- **Advanced data settings** opens provider, market type, timeframes, days and candle limits.
+- Changing an evidence setting after loading data marks the selection as changed so the user is prompted to load matching candles again.
 
 - Provider: data source.
 - Live Community providers: Bybit, Binance, OKX, Coinbase Exchange, and Kraken.
@@ -176,13 +183,13 @@ This area chooses data source, symbols, timeframe, history window, and download/
 
 ### Area 2 — Formula Builder
 
-This area builds the audit idea.
+This area starts with a compact formula recipe instead of a full technical form. A user can choose **Pullback with BTC context**, **Momentum expansion**, **Trend continuation**, or **Custom formula**, select `LONG` or `SHORT`, read the condition summary, and immediately run the audit.
 
 - Side: LONG or SHORT in Community.
 - LONG + SHORT comparison is a Pro preview.
-- Indicator blocks are toggles. First click adds; second click removes.
-- Operators are dropdowns to avoid invalid formulas.
-- Build JSON creates the portable formula.
+- **Edit formula rules** opens indicator blocks; changing a block marks the recipe as Custom.
+- **Advanced validation & portable JSON** opens session, timezone, thresholds, strict/relaxed tools, idea saving and JSON.
+- Build JSON remains available for technical inspection but is no longer required in the normal user path.
 
 ### Area 3 — Evidence Results
 
