@@ -536,10 +536,12 @@ function configureHostedDemo(status){
   document.getElementById('setupIntro').textContent='This hosted demo uses clearly labeled synthetic candles so anyone can test the audit workflow safely. Clone the project locally for public exchange downloads.';
   document.getElementById('sourceDetail').textContent='Generate clearly labeled synthetic demo data. Live feed downloads are available in a local installation.';
   document.getElementById('loadPublicCandles').hidden=true;
+  document.getElementById('assetSettings').hidden=true;
+  document.getElementById('dataAdvanced').hidden=true;
   document.getElementById('savedIdeasFold').hidden=true;
   document.getElementById('saveIdeaButton').hidden=true;
   document.getElementById('provider').disabled=true;
-  log('Hosted public demo: synthetic evidence only; no saved formulas or server-side market downloads.');
+  log('Hosted public demo: synthetic BTC, ETH and SOL evidence only; no saved formulas or server-side market downloads.');
 }
 window.addEventListener('load',async()=>{ renderSymbolPicker(); providerChanged(); applyRecipePreset('pullback'); try{ const s=await fetch('/api/status').then(r=>r.json()); configureHostedDemo(s); if(!s.public_demo) loadSavedIdeas(); log('Workbench ready in '+s.mode+'.'); }catch(e){ log('STATUS ERROR '+e.message); } });
 </script>

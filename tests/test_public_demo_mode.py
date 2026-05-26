@@ -123,6 +123,26 @@ class HostedPublicDemoTests(unittest.TestCase):
             self.assertEqual(response.status, 200)
             self.assertIn("text/csv", response.headers["Content-Type"])
 
+    def test_public_mode_restricts_demo_universe_and_formula_size(self) -> None:
+        status, generated = self.request_json(
+            "/api/generate_demo_cache",
+            {"symbols": "AIXBTUSDT", "timeframe": "5m", "context_timeframe": "15m"},
+        )
+        self.assertEqual(status, 400)
+        self.assertEqual(generated["error"], "public_demo_symbols_not_allowed")
+
+        status, audit = self.request_json(
+            "/api/audit_idea",
+            {
+                "idea": {
+                    "symbols": ["SOLUSDT"],
+                    "blocks": [{"indicator": "RSI"} for _ in range(13)],
+                },
+            },
+        )
+        self.assertEqual(status, 400)
+        self.assertEqual(audit["error"], "public_demo_formula_too_complex")
+
 
 if __name__ == "__main__":
     unittest.main()

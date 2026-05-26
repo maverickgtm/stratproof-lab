@@ -6,7 +6,7 @@ StratProof Lab includes a hardened public-demo mode for a public landing experie
 
 - open the Evidence Command Center;
 - choose or edit a formula;
-- generate clearly labeled synthetic candles;
+- generate clearly labeled synthetic BTC, ETH and SOL candles;
 - run strict or relaxed research audits;
 - read generated reports;
 - download the complementary CSV evidence artifacts without a quota.
@@ -17,8 +17,9 @@ StratProof Lab includes a hardened public-demo mode for a public landing experie
 - saved-idea storage and retrieval;
 - arbitrary repository file serving;
 - direct generated-file browsing outside controlled report and CSV endpoints.
+- unbounded storage: generated visitor artifacts expire automatically and are capped by count.
 
-This boundary prevents a public demo from becoming a shared user-data store or an unbounded proxy to exchange endpoints. A cloned local Community installation continues to support public historical-data connectors.
+This boundary prevents a public demo from becoming a shared user-data store, an unbounded compute/storage workload or a proxy to exchange endpoints. A cloned local Community installation continues to support public historical-data connectors.
 
 ## Start Locally
 
@@ -31,6 +32,8 @@ python scripts/launch_local_workbench.py
 ```
 
 Open `http://127.0.0.1:8771/`.
+
+Hosted mode retains artifacts for one hour and keeps up to 250 recent files by default. Operators may tune those bounds with `STRATPROOF_PUBLIC_RETENTION_SECONDS` and `STRATPROOF_PUBLIC_MAX_ARTIFACT_FILES`.
 
 ## Example Systemd Service
 

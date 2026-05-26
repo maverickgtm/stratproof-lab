@@ -44,6 +44,9 @@ REPORT_DIR = RUNTIME_ROOT / "reports" / "local_workbench"
 IDEA_DIR = RUNTIME_ROOT / "data" / "local_workbench_ideas"
 PUBLIC_STATIC_PATHS = {"/app/auditor_dashboard/local_workbench.html"}
 PUBLIC_ARTIFACT_SUFFIXES = {".html", ".json", ".md"}
+PUBLIC_DEMO_SYMBOLS = {"BTCUSDT", "ETHUSDT", "SOLUSDT"}
+PUBLIC_RETENTION_SECONDS = max(300, int(os.environ.get("STRATPROOF_PUBLIC_RETENTION_SECONDS", "3600")))
+PUBLIC_MAX_ARTIFACT_FILES = max(20, int(os.environ.get("STRATPROOF_PUBLIC_MAX_ARTIFACT_FILES", "250")))
 
 
 def json_safe(value: Any) -> Any:
@@ -69,7 +72,8 @@ def json_response(handler: SimpleHTTPRequestHandler, payload: Any, status: int =
 
 def read_body(handler: SimpleHTTPRequestHandler) -> dict[str, Any]:
     length = int(handler.headers.get("Content-Length", "0") or 0)
-    if length > 2_000_000:
+    maximum = 100_000 if PUBLIC_DEMO else 2_000_000
+    if length > maximum:
         raise ValueError("request_body_too_large")
     raw = handler.rfile.read(length).decode("utf-8") if length else "{}"
     try:
@@ -118,6 +122,45 @@ def public_disabled(handler: SimpleHTTPRequestHandler, feature: str) -> None:
         "feature": feature,
         "message": "The hosted demo uses labeled synthetic evidence only. Run StratProof locally for this feature.",
     }, status=403)
+
+
+def prune_public_runtime() -> None:
+    """Keep an internet-facing demo from accumulating visitor artifacts."""
+    if not PUBLIC_DEMO:
+        return
+    candidates: list[tuple[float, Path]] = []
+    cutoff = time.time() - PUBLIC_RETENTION_SECONDS
+    for directory in (REPORT_DIR, IDEA_DIR):
+        if not directory.exists():
+            continue
+        for path in directory.rglob("*"):
+            if not path.is_file():
+                continue
+            try:
+                modified = path.stat().st_mtime
+                if modified < cutoff:
+                    path.unlink(missing_ok=True)
+                else:
+                    candidates.append((modified, path))
+            except OSError:
+                continue
+    candidates.sort(key=lambda candidate: candidate[0], reverse=True)
+    for _, path in candidates[PUBLIC_MAX_ARTIFACT_FILES:]:
+        try:
+            path.unlink(missing_ok=True)
+        except OSError:
+            continue
+
+
+def public_demo_idea_error(idea: dict[str, Any]) -> str | None:
+    if not PUBLIC_DEMO:
+        return None
+    symbols = {str(symbol).upper() for symbol in (idea.get("symbols") or [])}
+    if not symbols or not symbols.issubset(PUBLIC_DEMO_SYMBOLS):
+        return "public_demo_symbols_not_allowed"
+    if len(idea.get("blocks") or []) > 12:
+        return "public_demo_formula_too_complex"
+    return None
 
 
 
@@ -256,6 +299,7 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
                 "report_dir": rel(REPORT_DIR),
                 "data_cache_exists": (RUNTIME_ROOT / "data" / "market_cache").exists(),
                 "safety": "Audit-only by design. No broker execution.",
+                "public_demo_symbols": sorted(PUBLIC_DEMO_SYMBOLS) if PUBLIC_DEMO else None,
                 "export_policy": export_policy(),
             }
             json_response(self, payload)
@@ -396,8 +440,17 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
                 timeframe = str(payload.get("timeframe") or "5m")
                 context_timeframe = str(payload.get("context_timeframe") or "15m")
                 selected_symbols = [symbol for symbol in symbols.split(",") if symbol]
-                if PUBLIC_DEMO and (len(selected_symbols) > 4 or any(not symbol.isalnum() for symbol in selected_symbols)):
-                    raise ValueError("public_demo_symbols_invalid")
+                if PUBLIC_DEMO and (
+                    not selected_symbols
+                    or not set(selected_symbols).issubset(PUBLIC_DEMO_SYMBOLS)
+                ):
+                    json_response(self, {
+                        "ok": False,
+                        "error": "public_demo_symbols_not_allowed",
+                        "allowed_symbols": sorted(PUBLIC_DEMO_SYMBOLS),
+                    }, status=400)
+                    return
+                prune_public_runtime()
                 rows = min(max(int(payload.get("rows") or 2400), 100), 2400)
                 result = command([
                     sys.executable, "scripts/stage13_generate_multitimeframe_demo_cache.py",
@@ -417,11 +470,20 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
                 idea = payload.get("idea") or payload
                 if isinstance(idea, str):
                     idea = json.loads(idea)
+                validation_error = public_demo_idea_error(idea)
+                if validation_error:
+                    json_response(self, {
+                        "ok": False,
+                        "error": validation_error,
+                        "allowed_symbols": sorted(PUBLIC_DEMO_SYMBOLS),
+                    }, status=400)
+                    return
                 mode = "RELAXED_DISCOVERY_PROBE" if self.path == "/api/relaxed_audit" else "STRICT_USER_FORMULA"
                 if self.path == "/api/relaxed_audit":
                     idea = build_relaxed_discovery_idea(idea)
                 thresholds_raw = payload.get("thresholds") or [50, 55, 60, 65, 70, 75, 80]
                 thresholds = [int(x) for x in thresholds_raw]
+                prune_public_runtime()
                 REPORT_DIR.mkdir(parents=True, exist_ok=True)
                 IDEA_DIR.mkdir(parents=True, exist_ok=True)
                 ts = int(time.time())
@@ -454,6 +516,7 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
                 rows_payload = json_safe(rows)
                 threshold_json.write_text(json.dumps(rows_payload, ensure_ascii=False, indent=2, allow_nan=False), encoding="utf-8")
                 threshold_md.write_text(render_threshold_markdown(rows), encoding="utf-8")
+                prune_public_runtime()
                 json_response(self, {
                     "ok": True,
                     "mode": mode,
