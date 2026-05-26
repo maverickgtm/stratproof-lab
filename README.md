@@ -114,6 +114,20 @@ Fastest useful paths:
 
 Read the [Workbench user guide](docs/STAGE48_DEMO_WORKBENCH_USER_GUIDE.md).
 
+### Host a public interactive demo
+
+```bash
+STRATPROOF_PUBLIC_DEMO=1 \
+STRATPROOF_PUBLIC_RUNTIME_ROOT=/tmp/stratproof-public-demo \
+STRATPROOF_WORKBENCH_PORT=8771 \
+STRATPROOF_NO_BROWSER=1 \
+python scripts/launch_local_workbench.py
+```
+
+Hosted mode is deliberately synthetic-only: visitors can build formulas, execute labeled demo audits, inspect reports and download CSV evidence, while saved ideas and server-side public-feed downloads remain disabled. Local installs retain the full Community connector workflow.
+
+See [hosted public demo deployment](docs/HOSTED_PUBLIC_DEMO.md).
+
 ### Run the synthetic public demo
 
 ```bash

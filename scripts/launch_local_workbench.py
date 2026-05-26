@@ -1,9 +1,13 @@
 #!/usr/bin/env python3
-"""Launch the StratProof Lab local workbench.
+"""Launch the StratProof Lab local workbench or hardened public demo.
 
 This is a local-only HTTP server for trying real formulas end-to-end before a
 GitHub release. It uses only the Python standard library and the existing
 StratProof audit modules. It does not execute trades or connect to brokers.
+
+Set ``STRATPROOF_PUBLIC_DEMO=1`` for a synthetic-only hosted demo. That mode
+serves an allowlisted interface, isolates generated files in a runtime
+directory, and disables shared saved ideas and outbound market downloads.
 """
 from __future__ import annotations
 
@@ -31,8 +35,15 @@ from app.idea_lab.saved_ideas import save_idea, list_saved_ideas, load_saved_ide
 from app.idea_lab.indicator_library import block_catalog
 
 PORT_DEFAULT = 8765
-REPORT_DIR = PROJECT_ROOT / "reports" / "local_workbench"
-IDEA_DIR = PROJECT_ROOT / "data" / "local_workbench_ideas"
+PUBLIC_DEMO = os.environ.get("STRATPROOF_PUBLIC_DEMO", "").lower() in {"1", "true", "yes", "on"}
+RUNTIME_ROOT = (
+    Path(os.environ.get("STRATPROOF_PUBLIC_RUNTIME_ROOT", "/tmp/stratproof-public-demo")).resolve()
+    if PUBLIC_DEMO else PROJECT_ROOT
+)
+REPORT_DIR = RUNTIME_ROOT / "reports" / "local_workbench"
+IDEA_DIR = RUNTIME_ROOT / "data" / "local_workbench_ideas"
+PUBLIC_STATIC_PATHS = {"/app/auditor_dashboard/local_workbench.html"}
+PUBLIC_ARTIFACT_SUFFIXES = {".html", ".json", ".md"}
 
 
 def json_safe(value: Any) -> Any:
@@ -68,6 +79,8 @@ def read_body(handler: SimpleHTTPRequestHandler) -> dict[str, Any]:
 
 
 def rel(path: Path) -> str:
+    if PUBLIC_DEMO and path.is_relative_to(RUNTIME_ROOT):
+        return str(path.relative_to(RUNTIME_ROOT))
     try:
         return str(path.relative_to(PROJECT_ROOT))
     except Exception:
@@ -90,6 +103,21 @@ def export_policy(consume: bool = False) -> dict[str, Any]:
 
 def evidence_download_url(path: Path) -> str:
     return "/api/download_evidence?file=" + quote(path.name)
+
+
+def report_url(path: Path) -> str:
+    if PUBLIC_DEMO:
+        return "/api/report_artifact?file=" + quote(path.name)
+    return "/" + rel(path)
+
+
+def public_disabled(handler: SimpleHTTPRequestHandler, feature: str) -> None:
+    json_response(handler, {
+        "ok": False,
+        "error": "disabled_in_public_demo",
+        "feature": feature,
+        "message": "The hosted demo uses labeled synthetic evidence only. Run StratProof locally for this feature.",
+    }, status=403)
 
 
 
@@ -222,10 +250,11 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
         if parsed.path == "/api/status":
             payload = {
                 "product": "StratProof Lab",
-                "mode": "LOCAL_WORKBENCH_AUDIT_ONLY",
-                "project_root": str(PROJECT_ROOT),
+                "mode": "PUBLIC_SYNTHETIC_DEMO_AUDIT_ONLY" if PUBLIC_DEMO else "LOCAL_WORKBENCH_AUDIT_ONLY",
+                "public_demo": PUBLIC_DEMO,
+                "project_root": None if PUBLIC_DEMO else str(PROJECT_ROOT),
                 "report_dir": rel(REPORT_DIR),
-                "data_cache_exists": (PROJECT_ROOT / "data" / "market_cache").exists(),
+                "data_cache_exists": (RUNTIME_ROOT / "data" / "market_cache").exists(),
                 "safety": "Audit-only by design. No broker execution.",
                 "export_policy": export_policy(),
             }
@@ -249,6 +278,29 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
             self.end_headers()
             self.wfile.write(body)
             return
+        if parsed.path == "/api/report_artifact" and PUBLIC_DEMO:
+            requested_name = Path((parse_qs(parsed.query).get("file") or [""])[0]).name
+            requested_path = REPORT_DIR / requested_name
+            if (
+                not requested_name
+                or requested_path.suffix.lower() not in PUBLIC_ARTIFACT_SUFFIXES
+                or not requested_path.exists()
+            ):
+                json_response(self, {"ok": False, "error": "report_artifact_not_found"}, status=404)
+                return
+            content_type = {
+                ".html": "text/html; charset=utf-8",
+                ".json": "application/json; charset=utf-8",
+                ".md": "text/markdown; charset=utf-8",
+            }[requested_path.suffix.lower()]
+            body = requested_path.read_bytes()
+            self.send_response(200)
+            self.send_header("Content-Type", content_type)
+            self.send_header("Content-Length", str(len(body)))
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers()
+            self.wfile.write(body)
+            return
         if parsed.path.startswith("/reports/local_workbench/") and parsed.path.lower().endswith(".csv"):
             json_response(self, {"ok": False, "error": "use_evidence_download_endpoint"}, status=404)
             return
@@ -257,19 +309,31 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
             json_response(self, {"blocks": catalog, "count": len(catalog)})
             return
         if parsed.path == "/api/saved_ideas":
+            if PUBLIC_DEMO:
+                json_response(self, {"ideas": [], "count": 0, "disabled_in_public_demo": True})
+                return
             json_response(self, {"ideas": list_saved_ideas(), "count": len(list_saved_ideas())})
             return
         if parsed.path == "/api/load_idea":
+            if PUBLIC_DEMO:
+                public_disabled(self, "saved_ideas")
+                return
             qs = parse_qs(parsed.query)
             idea_hash = (qs.get("hash") or [""])[0]
             item = load_saved_idea(idea_hash) if idea_hash else None
             json_response(self, {"idea": item, "found": bool(item)})
+            return
+        if PUBLIC_DEMO and parsed.path not in PUBLIC_STATIC_PATHS:
+            json_response(self, {"ok": False, "error": "path_not_served_in_public_demo"}, status=404)
             return
         super().do_GET()
 
     def do_POST(self) -> None:  # noqa: N802
         try:
             if self.path == "/api/download_history":
+                if PUBLIC_DEMO:
+                    public_disabled(self, "public_market_download")
+                    return
                 payload = read_body(self)
                 provider = str(payload.get("provider") or "bybit").lower()
                 market_type = str(payload.get("market_type") or "linear")
@@ -331,7 +395,10 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
                 symbols = str(payload.get("symbols") or "SOLUSDT,ETHUSDT").upper().replace(" ", "")
                 timeframe = str(payload.get("timeframe") or "5m")
                 context_timeframe = str(payload.get("context_timeframe") or "15m")
-                rows = int(payload.get("rows") or 2400)
+                selected_symbols = [symbol for symbol in symbols.split(",") if symbol]
+                if PUBLIC_DEMO and (len(selected_symbols) > 4 or any(not symbol.isalnum() for symbol in selected_symbols)):
+                    raise ValueError("public_demo_symbols_invalid")
+                rows = min(max(int(payload.get("rows") or 2400), 100), 2400)
                 result = command([
                     sys.executable, "scripts/stage13_generate_multitimeframe_demo_cache.py",
                     "--provider", provider,
@@ -340,6 +407,7 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
                     "--timeframe", timeframe,
                     "--context-timeframe", context_timeframe,
                     "--rows", str(rows),
+                    "--root", str(RUNTIME_ROOT),
                 ], timeout=90)
                 json_response(self, result, 200 if result["ok"] else 500)
                 return
@@ -359,7 +427,12 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
                 ts = int(time.time())
                 idea_path = IDEA_DIR / f"idea_{ts}_{'relaxed' if self.path == '/api/relaxed_audit' else 'strict'}.json"
                 idea_path.write_text(json.dumps(idea, ensure_ascii=False, indent=2), encoding="utf-8")
-                report = run_idea_backtest(idea, project_root=PROJECT_ROOT, use_cache=False)
+                report = run_idea_backtest(
+                    idea,
+                    project_root=RUNTIME_ROOT,
+                    market_cache_root=RUNTIME_ROOT,
+                    use_cache=False,
+                )
                 report_json = REPORT_DIR / f"{report.idea_hash}_report.json"
                 report_md = REPORT_DIR / f"{report.idea_hash}_report.md"
                 report_html = REPORT_DIR / f"{report.idea_hash}_visual_report.html"
@@ -369,8 +442,13 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
                 report_json.write_text(json.dumps(report_payload, ensure_ascii=False, indent=2, allow_nan=False), encoding="utf-8")
                 report_md.write_text(report.report_markdown or "", encoding="utf-8")
                 report_html.write_text(render_visual_report_html(report, idea), encoding="utf-8")
-                evidence_csvs = export_audit_evidence_csvs(report, idea, REPORT_DIR, project_root=PROJECT_ROOT)
-                rows = simulate_thresholds(idea, thresholds, project_root=PROJECT_ROOT, use_cache=False)
+                evidence_csvs = export_audit_evidence_csvs(report, idea, REPORT_DIR, project_root=RUNTIME_ROOT)
+                rows = simulate_thresholds(
+                    idea,
+                    thresholds[:20],
+                    project_root=RUNTIME_ROOT,
+                    use_cache=False,
+                )
                 threshold_json = REPORT_DIR / f"{report.idea_hash}_thresholds.json"
                 threshold_md = REPORT_DIR / f"{report.idea_hash}_thresholds.md"
                 rows_payload = json_safe(rows)
@@ -386,11 +464,11 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
                     "report_html": rel(report_html),
                     "threshold_json": rel(threshold_json),
                     "threshold_md": rel(threshold_md),
-                    "report_json_url": "/" + rel(report_json),
-                    "report_md_url": "/" + rel(report_md),
-                    "report_html_url": "/" + rel(report_html),
-                    "threshold_json_url": "/" + rel(threshold_json),
-                    "threshold_md_url": "/" + rel(threshold_md),
+                    "report_json_url": report_url(report_json),
+                    "report_md_url": report_url(report_md),
+                    "report_html_url": report_url(report_html),
+                    "threshold_json_url": report_url(threshold_json),
+                    "threshold_md_url": report_url(threshold_md),
                     "evidence_notice": "Detected operations are replay events over stored candles, not executed account trades. Offline demo candles remain synthetic.",
                     "evidence_csvs": [
                         {
@@ -407,6 +485,9 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
                 return
 
             if self.path == "/api/save_idea":
+                if PUBLIC_DEMO:
+                    public_disabled(self, "saved_ideas")
+                    return
                 payload = read_body(self)
                 idea = payload.get("idea") or payload
                 idea_hash = save_idea(idea, title=idea.get("name") if isinstance(idea, dict) else None)
@@ -422,13 +503,14 @@ def main() -> int:
     port = int(os.environ.get("STRATPROOF_WORKBENCH_PORT") or PORT_DEFAULT)
     server = ThreadingHTTPServer(("127.0.0.1", port), WorkbenchHandler)
     url = f"http://127.0.0.1:{port}/app/auditor_dashboard/local_workbench.html"
-    print("STRATPROOF_LOCAL_WORKBENCH")
+    print("STRATPROOF_PUBLIC_DEMO" if PUBLIC_DEMO else "STRATPROOF_LOCAL_WORKBENCH")
     print(f"URL={url}")
-    print("MODE=AUDIT_ONLY_LOCAL_NO_BROKER_EXECUTION")
-    try:
-        webbrowser.open(url)
-    except Exception:
-        pass
+    print("MODE=PUBLIC_SYNTHETIC_DEMO_AUDIT_ONLY" if PUBLIC_DEMO else "MODE=AUDIT_ONLY_LOCAL_NO_BROKER_EXECUTION")
+    if not PUBLIC_DEMO and not os.environ.get("STRATPROOF_NO_BROWSER"):
+        try:
+            webbrowser.open(url)
+        except Exception:
+            pass
     try:
         server.serve_forever()
     except KeyboardInterrupt:

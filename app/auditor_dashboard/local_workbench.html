@@ -46,7 +46,7 @@
 </header>
 <section class="commandHero">
   <div>
-    <div class="eyebrow">Community v2 / open evidence interface</div>
+    <div class="eyebrow" id="editionLabel">Community v2 / open evidence interface</div>
     <h2>Trust the evidence, not the backtest headline.</h2>
     <p>Build a formula, run it against traceable candle inputs, and download every detected operation with the source path behind the verdict. Nothing here places an order.</p>
     <div class="heroActions"><button class="quickPrimary" onclick="quickAudit('demo')">Try demo + audit</button><a href="#formula">Customize formula</a><button class="secondaryCta" onclick="runEvidenceLadderPair()">Run evidence ladder</button></div>
@@ -60,14 +60,14 @@
 <div class="grid">
   <section class="panel dataPanel" id="data">
     <h2>1) Data Setup</h2>
-    <div class="small setupIntro">Choose evidence for the audit. Public exchange history is real market input; the one-click demo is clearly labeled synthetic.</div>
+    <div class="small setupIntro" id="setupIntro">Choose evidence for the audit. Public exchange history is real market input; the one-click demo is clearly labeled synthetic.</div>
     <input id="symbols" value="SOLUSDT,ETHUSDT" type="hidden" />
     <div class="compactCard">
       <div class="compactLabel">Selected Evidence</div>
       <div id="dataCompactTitle" class="compactValue">Bybit public history</div>
       <div id="dataCompactMeta" class="compactMeta">Spot · 5m · 30 days</div>
       <div id="selectedSymbolChips" class="chipLine"></div>
-      <div class="compactActions"><button class="green" onclick="downloadHistory()">Load public candles</button><button class="secondary" onclick="quickAudit('demo')">Try synthetic demo + audit</button></div>
+      <div class="compactActions"><button id="loadPublicCandles" class="green" onclick="downloadHistory()">Load public candles</button><button class="secondary" onclick="quickAudit('demo')">Try synthetic demo + audit</button></div>
     </div>
     <details class="fold" id="assetSettings">
       <summary>Change assets <span class="foldHint" id="assetCountHint">2 selected</span></summary>
@@ -107,7 +107,7 @@
         <button class="secondary" onclick="generateDemoCache()">Generate demo cache only</button>
       </div>
     </details>
-    <details class="fold">
+    <details class="fold" id="savedIdeasFold">
       <summary>Saved ideas & activity <span class="foldHint">Optional</span></summary>
       <div class="foldBody">
         <h3>Saved Ideas</h3><button class="secondary" onclick="loadSavedIdeas()">Refresh saved ideas</button><div id="savedIdeas" class="small"></div>
@@ -154,7 +154,7 @@
         <label>Idea name</label><input id="idea_name" value="BTC context pullback audit" oninput="buildIdeaJson(false)" />
         <div class="row"><div><label>Timezone</label><select id="timezone" onchange="markRecipeCustom(); buildIdeaJson(false)"><option value="America/New_York">New York / US Eastern</option><option value="America/El_Salvador">Central America (UTC-6)</option><option value="UTC">UTC</option><option value="Europe/London">London</option><option value="Europe/Berlin">Berlin / Central Europe</option><option value="America/Los_Angeles">Los Angeles / US Pacific</option><option value="Asia/Tokyo">Tokyo</option><option value="Asia/Singapore">Singapore</option></select></div><div><label>Session</label><select id="session" onchange="markRecipeCustom(); buildIdeaJson(false)"><option>NEW_YORK_OPEN</option><option>ALL</option><option>LONDON_OPEN</option><option>US_AFTERNOON</option><option>ASIA</option></select></div></div>
         <div class="row"><div><label>Score threshold</label><input id="score_threshold" type="number" value="65" min="0" max="100" oninput="markRecipeCustom(); buildIdeaJson(false)" /></div><div><label>Threshold comparison</label><input id="thresholds" value="50,55,60,65,70,75,80" /></div></div>
-        <div class="advancedActions"><button class="yellow" onclick="buildIdeaJson(true)">Build JSON</button><button class="green" onclick="runAudit()">Run strict audit</button><button class="secondary" onclick="runRelaxedAudit()">Run relaxed audit</button><button class="secondary" onclick="runEvidenceLadderPair()">Run strict + relaxed</button><button class="secondary" onclick="saveCurrentIdea()">Save Idea</button></div>
+        <div class="advancedActions"><button class="yellow" onclick="buildIdeaJson(true)">Build JSON</button><button class="green" onclick="runAudit()">Run strict audit</button><button class="secondary" onclick="runRelaxedAudit()">Run relaxed audit</button><button class="secondary" onclick="runEvidenceLadderPair()">Run strict + relaxed</button><button id="saveIdeaButton" class="secondary" onclick="saveCurrentIdea()">Save Idea</button></div>
         <div class="small">Portable JSON is optional for advanced inspection or sharing.</div><label>Portable formula JSON</label><textarea id="idea_json"></textarea>
       </div>
     </details>
@@ -530,7 +530,18 @@ async function runEvidenceLadderPair(){ log('Running strict + relaxed evidence l
 async function saveCurrentIdea(){ try{ const idea=getCurrentIdeaOrRebuild('Save idea'); const data=await api('/api/save_idea',{idea}); log('Saved idea '+data.idea_hash.slice(0,12)); loadSavedIdeas(); }catch(e){log('SAVE ERROR '+e.message)} }
 async function loadSavedIdeas(){ try{ const res=await fetch('/api/saved_ideas'); const data=await res.json(); savedIdeas.innerHTML=(data.ideas||[]).map(x=>`<div class="pill" onclick="loadIdea('${escapeHtml(x.idea_hash)}')">${escapeHtml(x.title)} · ${escapeHtml(x.idea_hash.slice(0,8))}</div>`).join('') || '<span class="muted">No saved ideas yet.</span>'; }catch(e){log('SAVED IDEAS ERROR '+e.message)} }
 async function loadIdea(hash){ const res=await fetch('/api/load_idea?hash='+encodeURIComponent(hash)); const data=await res.json(); if(data.idea && data.idea.builder){ document.getElementById('idea_json').value=JSON.stringify(data.idea.builder,null,2); blocks=data.idea.builder.blocks||[]; markRecipeCustom(); renderBlocks(); updateFormulaSummary(); log('Loaded saved idea '+hash.slice(0,12)); }}
-window.addEventListener('load',()=>{ renderSymbolPicker(); providerChanged(); applyRecipePreset('pullback'); loadSavedIdeas(); fetch('/api/status').then(r=>r.json()).then(s=>{ log('Workbench ready at '+s.project_root); }); });
+function configureHostedDemo(status){
+  if(!status.public_demo) return;
+  document.getElementById('editionLabel').textContent='Public demo / synthetic evidence only';
+  document.getElementById('setupIntro').textContent='This hosted demo uses clearly labeled synthetic candles so anyone can test the audit workflow safely. Clone the project locally for public exchange downloads.';
+  document.getElementById('sourceDetail').textContent='Generate clearly labeled synthetic demo data. Live feed downloads are available in a local installation.';
+  document.getElementById('loadPublicCandles').hidden=true;
+  document.getElementById('savedIdeasFold').hidden=true;
+  document.getElementById('saveIdeaButton').hidden=true;
+  document.getElementById('provider').disabled=true;
+  log('Hosted public demo: synthetic evidence only; no saved formulas or server-side market downloads.');
+}
+window.addEventListener('load',async()=>{ renderSymbolPicker(); providerChanged(); applyRecipePreset('pullback'); try{ const s=await fetch('/api/status').then(r=>r.json()); configureHostedDemo(s); if(!s.public_demo) loadSavedIdeas(); log('Workbench ready in '+s.mode+'.'); }catch(e){ log('STATUS ERROR '+e.message); } });
 </script>
 </body>
 </html>
