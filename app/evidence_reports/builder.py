@@ -75,10 +75,8 @@ def build_result_cards(report: Mapping[str, Any]) -> List[EvidenceCard]:
     net_r = _float(report, "net_r", "simple_net_r", "net_r_simple")
     max_dd = _float(report, "max_drawdown", "max_drawdown_r", "drawdown")
     duplicate_rate = _float(report, "duplicate_rate", "duplicate_rate_pct")
-    leakage_risk = _float(report, "leakage_risk", "leakage_risk_pct")
-    trades = _int(report, "trades", "signals", "total_signals", "sample_size")
-    evidence_score = _float(report, "evidence_score", "research_confidence", default=0.0)
-    truth_confidence = _float(report, "truth_confidence", default=0.0)
+    trades = _int(report, "known", "trades", "signals", "total_signals", "sample_size")
+    ambiguous = _int(report, "ambiguous", "ambiguous_same_candle")
 
     cards: List[EvidenceCard] = []
     cards.append(EvidenceCard(
@@ -88,8 +86,7 @@ def build_result_cards(report: Mapping[str, Any]) -> List[EvidenceCard]:
         summary=f"Research verdict: {verdict}. Audit-only result; evidence must be reviewed before any action.",
         metrics=[
             EvidenceMetric("verdict", "Verdict", verdict, status="neutral"),
-            EvidenceMetric("sample_size", "Sample Size", trades, status="positive" if trades >= 100 else "warning"),
-            EvidenceMetric("evidence_score", "Evidence Score", round(evidence_score, 2), "%", _status_for_rate(evidence_score, 70, 45)),
+            EvidenceMetric("sample_size", "Closed Outcomes", trades, status="positive" if trades >= 30 else "warning"),
         ],
         warnings=warnings[:3],
     ))
@@ -109,15 +106,15 @@ def build_result_cards(report: Mapping[str, Any]) -> List[EvidenceCard]:
 
     cards.append(EvidenceCard(
         card_id="quality_gate",
-        title="Quality Gate",
-        status="danger" if leakage_risk > 10 or duplicate_rate > 35 else ("warning" if leakage_risk > 3 or duplicate_rate > 15 else "positive"),
-        summary="Checks whether the result may be distorted by duplicate clusters, leakage, or small samples.",
+        title="Implemented Checks",
+        status="danger" if duplicate_rate > 35 or ambiguous > 0 else ("warning" if duplicate_rate > 15 or trades < 30 else "positive"),
+        summary="Measured checks only: clustered detections, same-candle ambiguity and closed sample size.",
         metrics=[
-            EvidenceMetric("duplicate_rate", "Duplicate Risk", round(duplicate_rate, 2), "%", _status_for_rate(duplicate_rate, 10, 25, inverse=True)),
-            EvidenceMetric("leakage_risk", "Leakage Risk", round(leakage_risk, 2), "%", _status_for_rate(leakage_risk, 1, 8, inverse=True)),
-            EvidenceMetric("truth_confidence", "Truth Confidence", round(truth_confidence, 2), "%", _status_for_rate(truth_confidence, 75, 50)),
+            EvidenceMetric("duplicate_rate", "Duplicate Rate", round(duplicate_rate, 2), "%", _status_for_rate(duplicate_rate, 10, 25, inverse=True)),
+            EvidenceMetric("ambiguous", "Same-Candle Ambiguous", ambiguous, status="positive" if ambiguous == 0 else "warning"),
+            EvidenceMetric("closed_outcomes", "Closed Outcomes", trades, status="positive" if trades >= 30 else "warning"),
         ],
-        warnings=[w for w in warnings if "duplicate" in w.lower() or "leak" in w.lower() or "sample" in w.lower()][:5],
+        warnings=[w for w in warnings if "duplicate" in w.lower() or "sample" in w.lower() or "candle" in w.lower()][:5],
     ))
 
     threshold_rows = report.get("score_thresholds") or report.get("threshold_comparison") or []

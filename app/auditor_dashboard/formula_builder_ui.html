@@ -50,7 +50,7 @@ const CATALOG=[
  {family:'Price Location',type:'bollinger_position',name:'Bollinger Position',desc:'Price near band or mean reversion zone',config:{timeframe:'5m',zone:'lower_band'}},
  {family:'Context',type:'session_filter',name:'Session Filter',desc:'Limit audit to a market session/timezone',config:{timezone:'America/New_York',session:'new_york_open'}},
  {family:'Simulation',type:'score_threshold',name:'Score Threshold Simulator',desc:'Compare score thresholds 50–80',config:{thresholds:[50,55,60,65,70,75,80]}},
- {family:'Derivatives',type:'funding_oi_placeholder',name:'Funding / OI Placeholder',desc:'Reserved for Pro data enrichment',config:{status:'placeholder'}}
+ {family:'Derivatives',type:'funding_oi_placeholder',name:'Funding / OI Placeholder',desc:'Future context input; not computed in the current audit',config:{status:'placeholder'}}
 ];
 let selected=[];
 function renderBlocks(){let el=document.getElementById('blocks');let groups={};CATALOG.forEach(b=>(groups[b.family]=groups[b.family]||[]).push(b));el.innerHTML='';Object.keys(groups).forEach(g=>{let title=document.createElement('div');title.className='group';title.textContent=g;el.appendChild(title);groups[g].forEach(b=>{let div=document.createElement('div');div.className='block';div.onclick=()=>addBlock(b);div.innerHTML=`<b>${b.name}</b><span>${b.desc}</span>`;el.appendChild(div);});});}

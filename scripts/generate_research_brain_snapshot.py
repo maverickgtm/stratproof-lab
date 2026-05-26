@@ -19,8 +19,7 @@ def main() -> int:
     out.write_text(snapshot_to_json(snapshot), encoding="utf-8")
     print(f"WROTE={out}")
     print(f"MODE={snapshot.mode}")
-    print(f"AUDIT_HEALTH={snapshot.audit_health_score}")
-    print(f"EVIDENCE_SCORE={snapshot.evidence_score}")
+    print(f"WORKFLOW_READINESS={snapshot.workflow_readiness_percent}")
     return 0
 
 

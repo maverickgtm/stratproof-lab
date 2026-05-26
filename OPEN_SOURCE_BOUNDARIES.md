@@ -1,6 +1,6 @@
 # Open Source Boundaries
 
-This repository is intended to represent the public Community Edition of StratProof Lab.
+This repository is the public Community release of StratProof Lab.
 
 ## Included in Community Edition
 
@@ -26,12 +26,12 @@ This repository is intended to represent the public Community Edition of StratPr
 - production telemetry;
 - tokens, API keys, or server credentials;
 - private signal channels;
-- enterprise connectors that require commercial agreements;
-- hosted SaaS infrastructure;
-- proprietary evidence scoring extensions;
+- connectors whose data rights or credentials are not suitable for a public release;
+- hosted infrastructure;
+- unvalidated scoring or prediction claims;
 - private formula evolution engines;
 - managed account or execution modules.
 
 ## Why these boundaries exist
 
-StratProof Lab should be useful as an open-source auditor while protecting sensitive private infrastructure, commercial modules, customer data, and future SaaS value.
+StratProof Lab should be useful as an open-source auditor without exposing credentials, private user data or unsupported research claims. The current release has no paid feature locks or download quotas. Optional hosting or support can be considered later if the community asks for it.

@@ -1,7 +1,7 @@
 """Local storage helpers for normalized market data.
 
 This writes CSV files in data/market_cache so Community users can run audits without
-requiring PostgreSQL. PostgreSQL import remains available for Pro/advanced setups.
+requiring PostgreSQL. Database import is a possible future contribution.
 """
 from __future__ import annotations
 

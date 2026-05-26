@@ -1,12 +1,10 @@
 {
-  "generated_ts": 1779368482,
+  "generated_ts": 1779835019,
   "product": "StratProof Lab",
   "mode": "VISUAL_OBSERVABILITY_ONLY",
-  "audit_health_score": 33.3,
-  "evidence_score": 65.8,
-  "truth_confidence": 50.0,
-  "duplicate_risk": "UNKNOWN",
-  "leakage_risk": "CONTROLLED_RESEARCH_ONLY",
+  "workflow_readiness_percent": 33.3,
+  "active_departments": 3,
+  "observed_outcomes": 0,
   "departments": [
     {
       "key": "setup",
@@ -21,7 +19,7 @@
       "label": "Data Setup Department",
       "status": "DEMO",
       "confidence": 0.74,
-      "summary": "Connect Bybit/Binance/CSV to build a dataset.",
+      "summary": "Connect one of five public exchange feeds or CSV to build a dataset.",
       "rows_seen": 0
     },
     {
@@ -61,7 +59,7 @@
       "label": "Quality Gate",
       "status": "READY",
       "confidence": 0.66,
-      "summary": "Anticlustering and duplicate checks available.",
+      "summary": "Duplicate checks available once an audit runs.",
       "rows_seen": 0
     },
     {

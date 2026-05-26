@@ -10,13 +10,14 @@ StratProof Lab v2 turns the Community Workbench into a multi-exchange evidence e
 - OKX unconfirmed candles and Kraken's documented current candle are removed from stored audit inputs.
 - Coinbase and Kraken are clearly limited to public spot candles in Community.
 - The Local Workbench exposes the implemented connectors and applies basic dynamic-output escaping.
-- Each formula audit offers up to three CSV audit-trail downloads: operation ledger, supporting candle path and eligible TradingView Portfolio replay import.
+- Each formula audit offers its three complementary CSV audit-trail artifacts: operation ledger, supporting candle path and eligible TradingView Portfolio replay import.
 - The Local Workbench is redesigned as an Evidence Command Center with live provenance, audit-state and verification-pack status.
 - Quick Audit reduces the first-user path to one action for synthetic walkthroughs or one audit action after public history is loaded, with immediate operations-CSV access.
-- Hosted demos can opt into a visible daily CSV-download allowance while local Community keeps audit exports available without that quota.
+- Community CSV evidence downloads are unrestricted; the release contains no download quota or feature lock.
 - Compatible `LONG` spot audits now surface a TradingView Portfolio replay button and guided visual cross-check workflow with explicit evidence limitations.
 - Data Setup and Formula Builder now default to a concise choose-and-run workflow, while preserving all technical controls in expandable advanced panels.
 - Evidence guidance now remains consistent when an audit exceeds its initial-review sample threshold.
+- Evidence cards display measured closed outcomes, returns, drawdown, duplicate rate and same-candle ambiguity rather than unsupported confidence scores.
 - CI now tests connector parsing and the duplicate-safe cache policy.
 
 ## Safety Boundary

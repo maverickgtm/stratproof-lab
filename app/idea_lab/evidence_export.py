@@ -62,7 +62,7 @@ def export_audit_evidence_csvs(
     project_root: str | Path = ".",
     horizon: int | None = None,
 ) -> list[dict[str, Any]]:
-    """Produce at most three auditable CSV artifacts for one formula audit.
+    """Produce the complementary auditable CSV artifacts for one formula audit.
 
     The audit identifies hypothetical replay entries against stored candles.
     These outputs deliberately do not call those entries executed trades.

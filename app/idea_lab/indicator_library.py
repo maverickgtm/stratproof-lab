@@ -141,7 +141,7 @@ DEFAULT_BLOCKS: list[IndicatorBlock] = [
     IndicatorBlock("bollinger_position", "Bollinger Band Position", "volatility", "Close relative to Bollinger bands.", {"period": 20, "stddev": 2, "position": "lower_band"}, "boolean", "Research-only block for mean reversion/volatility hypotheses."),
     IndicatorBlock("session_filter", "Session Filter", "time", "Restrict replay to selected sessions/timezone.", {"timezone": "America/New_York", "session": "new_york_open"}, "boolean", "Important for comparing Asia/London/NY behavior."),
     IndicatorBlock("score_threshold", "Score Threshold Simulator", "quality", "Compare formula performance across score thresholds.", {"thresholds": [50,55,60,65,70,75,80]}, "comparison", "Simulator only; does not activate signals."),
-    IndicatorBlock("funding_oi_placeholder", "Funding/OI Context Placeholder", "derivatives", "Optional derivatives context from user-provided APIs.", {"provider": "coinglass_or_coinalyze", "mode": "optional"}, "context", "Optional Pro/Enterprise enrichment; no raw secrets in repo."),
+    IndicatorBlock("funding_oi_placeholder", "Funding/OI Context Placeholder", "derivatives", "Optional derivatives context from user-provided APIs.", {"provider": "coinglass_or_coinalyze", "mode": "optional"}, "context", "Future research input; not computed in current audits."),
 ]
 
 

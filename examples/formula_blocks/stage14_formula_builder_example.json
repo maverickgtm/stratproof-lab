@@ -48,7 +48,6 @@
     "net_r_simple",
     "max_drawdown",
     "duplicate_rate",
-    "leakage_warning",
-    "evidence_score"
+    "same_candle_ambiguity"
   ]
 }

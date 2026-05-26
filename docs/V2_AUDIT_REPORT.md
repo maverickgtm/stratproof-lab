@@ -33,7 +33,7 @@ No connector places orders or requires exchange trading credentials.
 
 ## Audit Trail Exports Delivered
 
-Community v2 now produces a maximum of three CSV evidence artifacts after each formula audit:
+Community v2 now produces three complementary CSV evidence artifacts after each formula audit, with unrestricted downloads:
 
 1. A detected-operations ledger containing each replay detection, its formula trace and outcome.
 2. A candle-path export linking each detection to the stored public OHLCV evidence used to classify it.

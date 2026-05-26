@@ -23,11 +23,9 @@ class BrainSnapshot:
     generated_ts: int
     product: str
     mode: str
-    audit_health_score: float
-    evidence_score: float
-    truth_confidence: float
-    duplicate_risk: str
-    leakage_risk: str
+    workflow_readiness_percent: float
+    active_departments: int
+    observed_outcomes: int
     departments: list[DepartmentStatus]
     activity_feed: list[str]
     metrics: dict[str, Any]
@@ -92,7 +90,7 @@ def build_snapshot(db_path: str | Path | None = None) -> BrainSnapshot:
                 DepartmentStatus("truth", "Truth Engine", "ACTIVE", 0.98 if truth_v3 else 0.62, "Chronological TP/SL truth verification layer.", truth_v3),
                 DepartmentStatus("risk", "RiskGuard / Net R", "ACTIVE", 0.86 if net_r else 0.58, "Drawdown, expectancy, and risk veto reviews.", net_r),
                 DepartmentStatus("formula", "Formula Registry", "ACTIVE", 0.81 if formula_runs else 0.55, "Formula versions compete in audit-only mode.", formula_runs),
-                DepartmentStatus("quality", "Quality Gate", "ACTIVE", 0.9 if quality_rows else 0.6, "Duplicate, clustering, and low-quality contexts monitored.", quality_rows),
+                DepartmentStatus("quality", "Quality Gate", "ACTIVE", 0.9 if quality_rows else 0.6, "Duplicate and low-quality context checks monitored.", quality_rows),
                 DepartmentStatus("evidence", "Evidence Reports", "READY", 0.79, "Reports can summarize findings for human review.", 0),
                 DepartmentStatus("api", "API Contribution Center", "LOCKED", 0.75, "Research-only API references; no execution permissions.", 0),
             ]
@@ -125,7 +123,7 @@ def build_snapshot(db_path: str | Path | None = None) -> BrainSnapshot:
             DepartmentStatus("truth", "Truth Engine", "WAIT", 0.5, "Waiting for OHLCV and signals."),
             DepartmentStatus("risk", "RiskGuard / Net R", "WAIT", 0.5, "Waiting for audit results."),
             DepartmentStatus("formula", "Formula Registry", "READY", 0.68, "Formula versions can be compared."),
-            DepartmentStatus("quality", "Quality Gate", "READY", 0.66, "Anticlustering and duplicate checks available."),
+            DepartmentStatus("quality", "Quality Gate", "READY", 0.66, "Duplicate checks available once an audit runs."),
             DepartmentStatus("evidence", "Evidence Reports", "READY", 0.64, "Evidence packages can be generated."),
             DepartmentStatus("api", "API Contribution Center", "LOCKED", 0.7, "Research-only API references."),
         ]
@@ -135,21 +133,17 @@ def build_snapshot(db_path: str | Path | None = None) -> BrainSnapshot:
             "Submit a strategy idea to route it through the University.",
         ]
 
-    # Visual-only scores: derived from observability readiness, not trading promises.
+    # Workflow readiness reports enabled components, not strategy quality.
     active_departments = sum(1 for d in departments if d.status in {"ACTIVE", "READY", "SYNC", "WATCH"})
-    audit_health = round(100.0 * active_departments / max(len(departments), 1), 1)
-    evidence_score = round(sum(d.confidence for d in departments) / max(len(departments), 1) * 100, 1)
-    truth_confidence = next((round(d.confidence * 100, 1) for d in departments if d.key == "truth"), 0.0)
+    workflow_readiness = round(100.0 * active_departments / max(len(departments), 1), 1)
 
     return BrainSnapshot(
         generated_ts=int(time.time()),
         product="StratProof Lab",
         mode="VISUAL_OBSERVABILITY_ONLY",
-        audit_health_score=audit_health,
-        evidence_score=evidence_score,
-        truth_confidence=truth_confidence,
-        duplicate_risk="WATCH" if metrics.get("quality_rows", 0) else "UNKNOWN",
-        leakage_risk="CONTROLLED_RESEARCH_ONLY",
+        workflow_readiness_percent=workflow_readiness,
+        active_departments=active_departments,
+        observed_outcomes=int(metrics.get("outcomes", 0)),
         departments=departments,
         activity_feed=feed,
         metrics=metrics,

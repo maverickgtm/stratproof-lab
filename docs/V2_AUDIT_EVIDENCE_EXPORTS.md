@@ -1,6 +1,6 @@
 # Audit Trail CSV Exports
 
-StratProof Lab Community turns each formula audit into inspectable evidence, not just summary cards. After an audit, the Workbench offers a maximum of three CSV downloads.
+StratProof Lab Community turns each formula audit into inspectable evidence, not just summary cards. After an audit, the Workbench prepares three complementary CSV artifacts with unrestricted downloads.
 
 ## The Three Files
 

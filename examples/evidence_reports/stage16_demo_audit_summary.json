@@ -8,9 +8,7 @@
   "net_r": 2.0,
   "max_drawdown": -4.0,
   "duplicate_rate": 18.6,
-  "leakage_risk": 0.5,
-  "evidence_score": 58,
-  "truth_confidence": 74,
+  "ambiguous_same_candle": 1,
   "warnings": [
     "Sample below preferred review threshold of 100 closed outcomes.",
     "Duplicate cluster risk should be reviewed before promotion."

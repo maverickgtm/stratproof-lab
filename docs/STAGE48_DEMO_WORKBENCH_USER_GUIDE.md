@@ -149,19 +149,11 @@ The top status rail makes the evidence workflow explicit:
 
 - Input provenance tells the user whether public history has been loaded or the workflow is using synthetic demo inputs.
 - Audit engine shows whether the strict or discovery audit is running and how many outcomes closed.
-- Verification pack reports when the maximum-three CSV audit trail is ready.
+- Verification pack reports when the three complementary CSV audit artifacts are ready.
 
-### CSV access and hosted demo boundary
+### CSV evidence access
 
-The local open-source Community workbench keeps audit-trail CSV downloads available without a daily quota. This is important because verification should remain useful to GitHub users.
-
-For a separately hosted public demo, the server can disclose and enforce a free daily CSV allowance:
-
-```bash
-STRATPROOF_HOSTED_DEMO_DAILY_CSV_LIMIT=3 python3 scripts/launch_local_workbench.py
-```
-
-In that mode the dashboard displays how many free CSV downloads remain for the UTC day and offers a Pro preview when the allowance is exhausted. This repository does not include checkout, accounts or paid entitlement activation.
+The open-source Community workbench keeps audit-trail CSV downloads unrestricted. Verification is part of the product, not an upgrade gate. The repository contains no accounts, checkout or feature-entitlement system.
 
 ### Area 1 — Data Setup
 
@@ -185,8 +177,7 @@ The detailed controls are intentionally collapsed:
 
 This area starts with a compact formula recipe instead of a full technical form. A user can choose **Pullback with BTC context**, **Momentum expansion**, **Trend continuation**, or **Custom formula**, select `LONG` or `SHORT`, read the condition summary, and immediately run the audit.
 
-- Side: LONG or SHORT in Community.
-- LONG + SHORT comparison is a Pro preview.
+- Side: choose LONG or SHORT and audit each hypothesis independently.
 - **Edit formula rules** opens indicator blocks; changing a block marks the recipe as Custom.
 - **Advanced validation & portable JSON** opens session, timezone, thresholds, strict/relaxed tools, idea saving and JSON.
 - Build JSON remains available for technical inspection but is no longer required in the normal user path.
@@ -226,29 +217,26 @@ SHORT asks whether the conditions work for downward TP/SL logic.
 
 Differences can come from market regime, directional bias, volatility, session behavior, symbol trend, and the fact that TP/SL are mirrored.
 
-In Pro, this becomes Side Comparison: LONG vs SHORT, best side by symbol, session, and regime.
+An automated LONG-versus-SHORT comparison report is a useful future contribution, but it is not calculated today.
 
-## Community vs Pro expectation
+## Implemented scope and research gaps
 
-Community should demonstrate the product:
+The current Community release provides:
 
 - build formulas
 - import/generate data
 - run strict and relaxed audits
 - view reports
 - save ideas locally
+- unrestricted audit-trail CSV downloads
 
-Pro should add deeper research:
+Important research gaps remain visible:
 
-- LONG + SHORT side comparison
-- batch audits
-- walk-forward validation
-- regime/session analytics
-- more providers
-- premium reports
-- PDF exports
-- workspaces
-- strategy/version ranking
+- external trade-ledger import
+- costs, spread, slippage and funding sensitivity
+- walk-forward and holdout validation
+- measured leakage/lookahead and parameter-fragility diagnostics
+- side-by-side and batch comparison reports
 
 ## Pre-GitHub demo checklist
 

@@ -61,4 +61,4 @@ Public, after final manual review.
 ## License
 
 AGPL-3.0-or-later for Community Edition.
-Commercial licensing available separately for Pro, Team, Enterprise, and SaaS modules.
+The current Community release is fully open-source. Optional hosting or support may be considered later if adoption warrants it.

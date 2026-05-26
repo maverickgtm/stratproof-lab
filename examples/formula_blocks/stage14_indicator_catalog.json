@@ -129,6 +129,6 @@
       "mode": "optional"
     },
     "output_type": "context",
-    "audit_notes": "Optional Pro/Enterprise enrichment; no raw secrets in repo."
+    "audit_notes": "Future research input; not computed in current audits."
   }
 ]

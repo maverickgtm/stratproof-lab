@@ -222,29 +222,12 @@ class LocalStoreTests(unittest.TestCase):
             )
             self.assertEqual(report.overall["signals_total"], 0)
 
-    def test_hosted_demo_csv_quota_allows_three_downloads_before_upgrade_prompt(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
-            usage_file = Path(directory) / "csv_usage.json"
-            with patch.object(workbench, "HOSTED_DEMO_DAILY_CSV_LIMIT", 3), patch.object(
-                workbench, "EXPORT_USAGE_FILE", usage_file
-            ):
-                initial = workbench.export_policy()
-                first = workbench.export_policy(consume=True)
-                second = workbench.export_policy(consume=True)
-                third = workbench.export_policy(consume=True)
-                fourth = workbench.export_policy(consume=True)
-            self.assertEqual(initial["downloads_remaining_today"], 3)
-            self.assertTrue(first["request_allowed"])
-            self.assertTrue(second["request_allowed"])
-            self.assertTrue(third["request_allowed"])
-            self.assertEqual(third["downloads_remaining_today"], 0)
-            self.assertFalse(fourth["request_allowed"])
-
-    def test_local_community_csv_download_policy_remains_unlimited(self) -> None:
-        with patch.object(workbench, "HOSTED_DEMO_DAILY_CSV_LIMIT", 0):
-            policy = workbench.export_policy(consume=True)
-        self.assertEqual(policy["mode"], "COMMUNITY_LOCAL_UNLIMITED")
+    def test_community_csv_download_policy_is_unrestricted(self) -> None:
+        policy = workbench.export_policy(consume=True)
+        self.assertEqual(policy["mode"], "COMMUNITY_UNRESTRICTED")
+        self.assertFalse(policy["limited"])
         self.assertTrue(policy["can_download"])
+        self.assertTrue(policy["request_allowed"])
         self.assertIsNone(policy["daily_limit"])
 
 

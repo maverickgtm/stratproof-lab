@@ -1,42 +1,23 @@
-# StratProof Lab Dual-License Model
+# License And Future Options
 
-StratProof Lab is intended to be distributed under a dual-license model:
+The public StratProof Lab repository is licensed under GNU Affero General Public License v3.0 or later (`AGPL-3.0-or-later`).
 
-1. **Community Edition** — GNU Affero General Public License v3.0 or later (`AGPL-3.0-or-later`).
-2. **Commercial / Pro / Enterprise Edition** — separate commercial license granted by the project owner.
+## Community Release
 
-This model is designed to make the public auditor useful to the community while preserving a business path for private deployments, hosted SaaS, enterprise connectors, premium dashboards, support, and proprietary modules.
+The Community release includes the public audit framework, formula builder, evidence reports, Research Brain observability view, public connector implementations, CSV imports and audit-only examples. Users may use, study, modify and share it under the AGPL.
 
-## Community Edition
+## Network Use
 
-The Community Edition includes the public audit framework, demo workflows, formula-builder screens, evidence report builder, Research Brain View, public connector interfaces, CSV imports, and audit-only examples.
+Because this project uses the AGPL, modified versions made available to users over a network may trigger source-code availability obligations under that license.
 
-Users may use, study, modify, and share the Community Edition under AGPL-3.0-or-later.
+## Possible Future Sustainability
 
-## Network/SaaS use
+There are no paid editions, checkout flows, usage quotas or locked research features in this release. If adoption warrants it, the project owner may later consider optional hosting, support or a separately negotiated license for organizations that cannot use AGPL software under their requirements.
 
-Because the Community Edition uses AGPL-3.0-or-later, modified versions offered to users over a network may trigger source-code availability obligations under the AGPL.
+No separate commercial rights are granted unless they are explicitly agreed in writing.
 
-## Commercial Edition
+## No Implied Trading License
 
-A commercial license may be offered separately for organizations that want:
+This software is a research auditor, not a broker, investment adviser, managed-account provider, signal seller or guaranteed-return system.
 
-- private/internal deployment without AGPL source-sharing obligations;
-- proprietary extensions;
-- private SaaS use;
-- enterprise connectors;
-- white-label dashboards;
-- advanced support;
-- premium evidence reports;
-- private strategy audit pipelines;
-- modules not included in the Community Edition.
-
-A commercial license must be explicitly granted in writing. The presence of this document does not grant commercial rights by itself.
-
-## No implied trading license
-
-Neither the Community nor Commercial model grants permission to represent StratProof Lab as a broker, investment adviser, managed account provider, signal seller, or guaranteed-return trading system.
-
-## Legal review
-
-This document is a product/license boundary document, not legal advice. Before public release or paid licensing, review with a qualified attorney.
+This document is not legal advice. Obtain qualified advice before offering separate licenses or operated services.

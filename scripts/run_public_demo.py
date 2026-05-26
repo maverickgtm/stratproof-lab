@@ -78,7 +78,7 @@ def write_demo_summary(results: list[dict]) -> None:
         "1. Generates synthetic multi-timeframe crypto market data.",
         "2. Runs a Formula Builder idea through the Idea Lab audit runner.",
         "3. Builds evidence report cards.",
-        "4. Exports Formula Builder, indicator, pricing, and GitHub support assets.",
+        "4. Exports Formula Builder, indicator and GitHub support assets.",
         "5. Leaves browser-ready dashboard screens available under `app/auditor_dashboard/`.",
         "",
         "## Main outputs",
@@ -133,7 +133,6 @@ def main() -> int:
         ("Export Formula Builder schema", [py, "scripts/stage15_export_formula_builder_schema.py"]),
         ("Generate Research Brain snapshot", [py, "scripts/generate_research_brain_snapshot.py", "--db", "data/demo_missing.sqlite3", "--out", "reports/public_demo/research_brain_snapshot.json"]),
         ("Generate GitHub assets", [py, "scripts/stage17_generate_github_assets.py"]),
-        ("Export pricing assets", [py, "scripts/stage26_export_pricing_assets.py"]),
     ]
 
     for name, cmd in commands:
