@@ -57,6 +57,8 @@ def json_response(handler: SimpleHTTPRequestHandler, payload: Any, status: int =
 
 def read_body(handler: SimpleHTTPRequestHandler) -> dict[str, Any]:
     length = int(handler.headers.get("Content-Length", "0") or 0)
+    if length > 2_000_000:
+        raise ValueError("request_body_too_large")
     raw = handler.rfile.read(length).decode("utf-8") if length else "{}"
     try:
         return json.loads(raw or "{}")
@@ -190,6 +192,9 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
 
     def do_GET(self) -> None:  # noqa: N802
         parsed = urlparse(self.path)
+        if any(part in {".git", ".env"} or part.startswith(".env.") for part in Path(parsed.path).parts):
+            json_response(self, {"ok": False, "error": "path_not_served"}, status=404)
+            return
         if parsed.path == "/":
             self.send_response(302)
             self.send_header("Location", "/app/auditor_dashboard/local_workbench.html")
@@ -233,13 +238,13 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
                 limit = int(payload.get("limit") or 1000)
                 context_timeframe = str(payload.get("context_timeframe") or "15m")
                 include_btc_context = bool(payload.get("include_btc_context", True))
-                live_download_providers = {"bybit", "binance"}
+                live_download_providers = {"bybit", "binance", "okx", "coinbase", "kraken"}
                 if provider not in live_download_providers:
                     json_response(self, {
                         "ok": False,
                         "provider": provider,
                         "reason": "provider_registered_but_live_downloader_not_implemented_in_community_preview",
-                        "message": "This provider is part of the connector roadmap/import matrix. Use Bybit/Binance live download, CSV/local import, or Generate offline demo cache for now.",
+                        "message": "This provider is part of the connector roadmap/import matrix. Use a live Community connector, CSV/local import, or Generate offline demo cache for now.",
                         "commands": [],
                     }, 200)
                     return

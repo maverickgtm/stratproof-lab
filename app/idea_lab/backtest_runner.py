@@ -278,6 +278,7 @@ def evaluate_blocks(
             period = safe_int(block.get("period"), 14)
             values = (indicator_cache or {}).get("rsi", {}).get(period) if indicator_cache else rsi(closes, period)
             v = values[idx] if values else None
+            target = None
             if v is not None:
                 target = safe_float(block.get("value"), None)
             if target is None:

@@ -2,6 +2,29 @@
 
 All notable public changes to StratProof Lab will be documented here.
 
+## v2.0.0-community-preview
+
+### Added
+
+- Live public historical OHLCV downloads for OKX, Coinbase Exchange, and Kraken alongside Bybit and Binance.
+- Connector validation tests for normalized candle parsing and completed-candle safeguards.
+- An evidence-integrity cache merge policy that prevents repeated downloads from duplicating candle timestamps.
+- Live provider selection in the local Workbench for all five implemented Community connectors.
+
+### Fixed
+
+- Kraken's documented current, uncommitted OHLC candle is excluded from audit inputs.
+- OKX unconfirmed candles are excluded from audit inputs.
+- Community provider claims now match implemented downloaders.
+- Dynamic Workbench report and saved-idea fields are escaped before HTML rendering.
+- Comprehensive-product checks validate current README language and new connector tests run in CI.
+- The project notice is separated from canonical AGPL text so repository hosts can identify the license cleanly.
+
+### Boundaries
+
+- Public data import remains audit-only: no API keys, order placement, signals, or broker execution.
+- Coinbase and Kraken Community downloads are spot-only; OKX supports public spot and USDT swap candle inputs.
+
 ## v0.1.0-community-preview
 
 Initial community preview release.

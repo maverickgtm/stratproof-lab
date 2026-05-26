@@ -2,7 +2,7 @@
 
 ## Decision
 
-StratProof Lab should launch first as **Community Edition v0.1.0-community-preview**.
+StratProof Lab is advancing as **Community Edition v2.0.0-community-preview**.
 
 Community is the public AGPL edition. It is useful on its own, but it is intentionally limited to local, audit-only workflows.
 
@@ -13,7 +13,8 @@ Pro, Pro Plus, Team, and Enterprise are commercial roadmap editions. They can be
 - Local Workbench.
 - Formula Builder basics.
 - Main symbol selector and custom symbol input.
-- Bybit and Binance public history download.
+- Bybit, Binance, OKX, Coinbase Exchange, and Kraken public history download.
+- Duplicate-safe normalized candle cache and completed-candle controls.
 - Offline synthetic demo cache.
 - Strict audit.
 - Relaxed discovery audit.

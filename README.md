@@ -14,6 +14,20 @@ It turns strategy ideas into testable hypotheses, runs chronological audits, cha
 </div>
 ---
 
+## v2.0: Multi-exchange evidence, not single-venue trust
+
+Community v2 can import completed public OHLCV candles from **Bybit, Binance, OKX, Coinbase Exchange, and Kraken**. A trader can test the same hypothesis across independent exchange sources instead of accepting one venue's history as the whole story.
+
+The v2 integrity rules are intentionally strict:
+
+- repeat downloads merge by candle timestamp instead of duplicating audit samples;
+- OKX unconfirmed candles are rejected;
+- Kraken's documented current, uncommitted final candle is rejected;
+- Coinbase and Kraken are spot-only in the public Community downloader;
+- every connector is audit-only and uses no API key or trading permission.
+
+See [Public connector evidence policy](docs/V2_PUBLIC_CONNECTORS.md) for endpoint and market-coverage details, and [v2 audit report](docs/V2_AUDIT_REPORT.md) for corrected findings and the next product direction.
+
 ## See the audit workflow
 
 StratProof Lab should feel different from a normal backtester. The product story is simple: build an idea, audit the evidence, inspect the quality gates, and understand how the research system reached its verdict.
@@ -265,7 +279,7 @@ Paid editions are planned, but **no payment system, license server, customer dat
 |---|---:|---:|---:|---:|
 | Local Workbench | ✅ | ✅ | ✅ | ✅ |
 | Formula Builder | ✅ Basic | ✅ Advanced | ✅ Advanced | ✅ Advanced |
-| Bybit/Binance public history | ✅ Basic | ✅ Larger limits | ✅ Larger limits | ✅ Custom limits |
+| Bybit/Binance/OKX/Coinbase/Kraken public history | ✅ Basic | ✅ Larger limits | ✅ Larger limits | ✅ Custom limits |
 | Offline synthetic demo cache | ✅ | ✅ | ✅ | ✅ |
 | Strict audit | ✅ | ✅ | ✅ | ✅ |
 | Relaxed discovery audit | ✅ | ✅ | ✅ | ✅ |
@@ -300,7 +314,7 @@ Paid editions are not required to use Community. Community should remain useful 
 
 ## Current release
 
-Current public release: `v0.1.0-community-preview`.
+Current public release candidate: `v2.0.0-community-preview`.
 
 StratProof Lab Community is available now as a local-first, audit-only GitHub preview. Paid editions are planned, but no checkout, wallet, license server, or payment secret is active in this repository.
 
@@ -371,7 +385,7 @@ Generate offline demo cache
 = creates synthetic local demo candles. Use it to test the UI and workflow quickly.
 
 Download public history
-= downloads real public candles from supported providers such as Bybit or Binance.
+= downloads real public completed candles from Bybit, Binance, OKX, Coinbase Exchange, or Kraken.
 ```
 
 Read the full guide:
@@ -450,7 +464,10 @@ Community focus:
 - CSV import,
 - Bybit public market data,
 - Binance public market data,
-- OKX / Coinbase / Kraken roadmap,
+- OKX public market history for spot and USDT swaps,
+- Coinbase Exchange public spot candles,
+- Kraken public spot OHLC with the live final candle removed from audit input,
+- duplicate-safe local candle cache,
 - CCXT fallback specification.
 
 Future Pro / Enterprise roadmap:
@@ -586,9 +603,9 @@ StratProof Lab is audit-only by design. It is not a broker, exchange, investment
 
 ## Release status
 
-Current package status: **pre-release / GitHub preparation**.
+Current package status: **v2.0 Community Preview release candidate**.
 
-The public package has passed smoke tests and safety scanning. The canonical AGPL-3.0 license text is present. This repository is published as the v0.1.0 Community Preview. Future releases will continue improving screenshots, branding, docs, and Pro roadmap clarity.
+The public package includes smoke testing and safety scanning. The canonical AGPL-3.0 license text is present. Version 2.0 adds multi-exchange public candle evidence and duplicate-safe caching while retaining the audit-only boundary.
 
 
 
@@ -618,9 +635,9 @@ Planned annual incentive:
 
 ---
 
-## v0.1.0 Community Preview
+## v2.0.0 Community Preview
 
-StratProof Lab is now published as a controlled GitHub Community Preview. The release package includes a one-command demo, visual GitHub assets, release notes, issue templates, AGPL licensing, and a final launch copy pack.
+StratProof Lab v2 is a multi-exchange Community Preview release candidate. It includes a one-command demo, five implemented public candle connectors, data-integrity safeguards, visual GitHub assets, tests, issue templates, and AGPL licensing.
 
 
 ## Community vs Pro preview

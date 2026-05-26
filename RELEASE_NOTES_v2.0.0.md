@@ -1,0 +1,28 @@
+# StratProof Lab v2.0.0 Community Preview
+
+StratProof Lab v2 turns the Community Workbench into a multi-exchange evidence environment. The project still does not execute trades or promise performance; it helps users challenge a formula against traceable public candle inputs before taking risk.
+
+## Highlights
+
+- Five implemented public historical-data connectors: Bybit, Binance, OKX, Coinbase Exchange, and Kraken.
+- The same hypothesis can be researched across multiple crypto venues through one normalized OHLCV format.
+- Local candle storage now merges overlapping downloads by timestamp instead of duplicating observations.
+- OKX unconfirmed candles and Kraken's documented current candle are removed from stored audit inputs.
+- Coinbase and Kraken are clearly limited to public spot candles in Community.
+- The Local Workbench exposes the implemented connectors and applies basic dynamic-output escaping.
+- CI now tests connector parsing and the duplicate-safe cache policy.
+
+## Safety Boundary
+
+- Audit-only and local-first.
+- No exchange API keys required for these public history downloads.
+- No broker permissions, signals, order placement, live execution, or managed funds.
+- Public exchange endpoint availability, regional restrictions, rate limits, instrument coverage, and historical depth still apply.
+
+## Quick Test
+
+```bash
+python scripts/launch_local_workbench.py
+```
+
+Choose a live Community provider, download public candles or generate offline demonstration data, build an idea, and compare strict evidence with relaxed discovery.

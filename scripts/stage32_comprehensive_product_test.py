@@ -25,11 +25,12 @@ def text(name, rel, includes=(), excludes=()):
 checks=[]
 checks.append(exists('core_public_files', [Path('README.md'),Path('LICENSE'),Path('VERSION'),Path('CHANGELOG.md'),Path('scripts/run_public_demo.py'),Path('tests/smoke_test_public_package.py')]))
 checks.append(exists('visual_product_files', [Path('app/auditor_dashboard/formula_builder_ui.html'),Path('app/auditor_dashboard/evidence_report_builder_ui.html'),Path('app/auditor_dashboard/research_brain_view.html'),Path('assets/github/screenshots/01_formula_builder_ui.png'),Path('assets/github/screenshots/02_evidence_report_cards.png'),Path('assets/github/screenshots/03_research_brain_view.png'),Path('assets/github/screenshots/04_provider_connector_layer.png')]))
-checks.append(text('readme_premium_positioning', Path('README.md'), ['Most trading strategies look good','Evidence engine for trading strategies','Audit-only by design'], ['guaranteed' + ' profit','risk-' + 'free returns']))
+checks.append(text('readme_v2_positioning', Path('README.md'), ['Most trading strategies look good', 'evidence engine for traders', 'multi-exchange public candle evidence', 'audit-only boundary'], ['guaranteed' + ' profit', 'risk-' + 'free returns']))
 checks.append(text('license_agpl_canonical_present', Path('LICENSE'), ['GNU AFFERO GENERAL PUBLIC LICENSE','Version 3']))
 cmds=[
  ('python_compile',[sys.executable,'-m','compileall','-q','app','scripts','tests'],120),
  ('public_smoke_test',[sys.executable,'tests/smoke_test_public_package.py'],90),
+ ('provider_connector_tests',[sys.executable,'-m','unittest','discover','-s','tests','-p','test_*.py','-v'],90),
  ('indicator_catalog_direct_script',[sys.executable,'scripts/stage14_export_indicator_catalog.py'],90),
  ('formula_schema_direct_script',[sys.executable,'scripts/stage15_export_formula_builder_schema.py'],90),
  ('evidence_builder_direct_script',[sys.executable,'scripts/stage16_build_evidence_report.py','examples/evidence_reports/stage16_demo_audit_summary.json','--out-dir','reports/stage32/evidence'],90),

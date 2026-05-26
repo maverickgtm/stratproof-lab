@@ -53,13 +53,23 @@ class Finding:
 
 
 def iter_files(root: Path) -> Iterable[Path]:
+    """Inspect what Git can publish, not ignored local audit artifacts."""
+    proc = subprocess.run(
+        ["git", "ls-files", "--cached", "--others", "--exclude-standard"],
+        cwd=root,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+    )
+    if proc.returncode == 0:
+        for relative in proc.stdout.splitlines():
+            path = root / relative
+            if path.is_file():
+                yield path
+        return
     for path in root.rglob("*"):
-        if not path.is_file():
-            continue
-        parts = set(path.parts)
-        if ".git" in parts or "__pycache__" in parts:
-            continue
-        yield path
+        if path.is_file() and ".git" not in set(path.parts) and "__pycache__" not in set(path.parts):
+            yield path
 
 
 def is_text_file(path: Path) -> bool:

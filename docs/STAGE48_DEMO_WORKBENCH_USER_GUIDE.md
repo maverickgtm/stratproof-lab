@@ -28,7 +28,9 @@ Use it for:
 
 Use this when you want to audit against real public exchange candles.
 
-Community currently supports live public downloads for Bybit and Binance. Other providers are listed as roadmap/import targets unless implemented later.
+Community v2 supports live public downloads for Bybit, Binance, OKX, Coinbase Exchange, and Kraken. Coinbase and Kraken downloads are spot-only. OKX supports spot and USDT swap candles. Other providers remain roadmap/import targets unless explicitly implemented later.
+
+Downloaded candle history is merged by timestamp, so rerunning the same range does not inflate a backtest sample with duplicates. OKX unconfirmed candles and Kraken's current uncommitted candle are excluded before audit input is stored.
 
 Use it for:
 
@@ -50,7 +52,8 @@ python3 scripts/launch_local_workbench.py
 Then follow this order:
 
 1. Choose provider.
-   - Use `bybit` or `binance` for public downloads.
+   - Use `bybit`, `binance`, `okx`, `coinbase`, or `kraken` for public downloads.
+   - Choose `spot` for Coinbase or Kraken.
    - Use offline demo cache for UI-only testing.
 
 2. Choose symbols.
@@ -105,6 +108,7 @@ Then follow this order:
 This area chooses data source, symbols, timeframe, history window, and download/cache method.
 
 - Provider: data source.
+- Live Community providers: Bybit, Binance, OKX, Coinbase Exchange, and Kraken.
 - Symbols: pairs to audit.
 - Main timeframe: candle timeframe used for the audited symbols.
 - BTC context timeframe: timeframe used for BTC trend/context block.
@@ -183,8 +187,8 @@ Pro should add deeper research:
 Before publishing, test:
 
 - offline cache generation
-- public history download for Bybit
-- public history download for Binance
+- public history download for each live connector supported in the test region
+- repeated history download without duplicate timestamps
 - formula builder with RSI/BTC EMA/Relative Volume/EMA
 - LONG audit
 - SHORT audit

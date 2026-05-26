@@ -9,7 +9,8 @@ Includes:
 - Formula Builder basics
 - Local Workbench
 - Top symbols + custom symbols
-- Bybit/Binance public history downloader
+- Bybit, Binance, OKX, Coinbase Exchange, and Kraken public history downloader
+- Duplicate-safe cache and completed-candle evidence controls
 - Offline demo cache
 - Strict audit
 - Relaxed discovery audit

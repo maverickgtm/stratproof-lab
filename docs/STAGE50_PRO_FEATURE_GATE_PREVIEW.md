@@ -10,7 +10,7 @@ Community remains fully usable for:
 - relaxed discovery audit
 - visual evidence reports
 - Markdown/JSON reports
-- Bybit/Binance public history
+- Bybit/Binance/OKX/Coinbase/Kraken public history
 
 Paid previews shown but locked:
 

@@ -22,3 +22,5 @@ jobs:
         run: python -m compileall app scripts tests
       - name: Public smoke test
         run: python tests/smoke_test_public_package.py
+      - name: Community connector and cache integrity tests
+        run: python -m unittest discover -s tests -p 'test_*.py' -v

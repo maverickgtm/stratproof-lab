@@ -10,7 +10,7 @@ summary = {
     "name": "GitHub Upload Command Pack",
     "repo": "stratproof-lab",
     "version": (ROOT / "VERSION").read_text(encoding="utf-8").strip() if (ROOT / "VERSION").exists() else "unknown",
-    "release_tag": "v0.1.0-community-preview",
+    "release_tag": "v2.0.0-community-preview",
     "upload_mode": "manual_controlled",
     "automatic_upload": False,
     "required_docs": [

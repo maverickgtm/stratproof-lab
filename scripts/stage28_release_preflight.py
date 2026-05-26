@@ -13,9 +13,10 @@ REPORT = ROOT / "reports" / "stage28" / "release_preflight.json"
 REQUIRED = [
     "README.md",
     "LICENSE",
+    "NOTICE",
     "VERSION",
     "CHANGELOG.md",
-    "RELEASE_NOTES_v0.1.0.md",
+    "RELEASE_NOTES_v2.0.0.md",
     ".github/ISSUE_TEMPLATE/bug_report.md",
     ".github/ISSUE_TEMPLATE/feature_request.md",
     ".github/ISSUE_TEMPLATE/strategy_audit_question.md",
@@ -23,6 +24,9 @@ REQUIRED = [
     ".github/workflows/ci.yml",
     "scripts/run_public_demo.py",
     "tests/smoke_test_public_package.py",
+    "tests/test_provider_connectors.py",
+    "docs/V2_PUBLIC_CONNECTORS.md",
+    "docs/V2_AUDIT_REPORT.md",
     "assets/github/screenshots/01_formula_builder_ui.png",
     "assets/github/screenshots/02_evidence_report_cards.png",
     "assets/github/screenshots/03_research_brain_view.png",
@@ -41,13 +45,16 @@ def main() -> int:
     checks.append({"name": "required_release_files", "status": "PASS" if not missing else "FAIL", "missing": missing})
 
     version = (ROOT / "VERSION").read_text().strip() if (ROOT / "VERSION").exists() else ""
-    checks.append({"name": "version", "status": "PASS" if version == "0.1.0-community-preview" else "FAIL", "version": version})
+    checks.append({"name": "version", "status": "PASS" if version == "2.0.0-community-preview" else "FAIL", "version": version})
 
     code, out = run([sys.executable, "-m", "compileall", "app", "scripts", "tests"])
     checks.append({"name": "python_compile", "status": "PASS" if code == 0 else "FAIL", "output_tail": out})
 
     code, out = run([sys.executable, "tests/smoke_test_public_package.py"])
     checks.append({"name": "public_smoke_test", "status": "PASS" if code == 0 else "FAIL", "output_tail": out})
+
+    code, out = run([sys.executable, "-m", "unittest", "discover", "-s", "tests", "-p", "test_*.py", "-v"])
+    checks.append({"name": "provider_connector_tests", "status": "PASS" if code == 0 else "FAIL", "output_tail": out})
 
     overall = "PASS" if all(c["status"] == "PASS" for c in checks) else "FAIL"
     REPORT.parent.mkdir(parents=True, exist_ok=True)

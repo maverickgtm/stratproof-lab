@@ -15,14 +15,14 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
-from app.provider_connectors.base import ProviderRequest, timeframe_to_ms
+from app.provider_connectors.base import ProviderRequest
 from app.provider_connectors.factory import get_connector
-from app.provider_connectors.local_store import append_ohlcv_csv, cache_path
+from app.provider_connectors.local_store import cache_path, merge_ohlcv_csv
 
 
 def main() -> int:
     p = argparse.ArgumentParser()
-    p.add_argument('--provider', required=True, choices=['bybit','binance'])
+    p.add_argument('--provider', required=True, choices=['bybit','binance','okx','coinbase','kraken'])
     p.add_argument('--market-type', default='linear')
     p.add_argument('--symbols', required=True, help='Comma separated, e.g. BTCUSDT,ETHUSDT')
     p.add_argument('--timeframe', default='5m')
@@ -44,8 +44,8 @@ def main() -> int:
         if args.dry_run:
             continue
         rows = connector.fetch_ohlcv(req)
-        written = append_ohlcv_csv(out_path, rows)
-        print(f'OK symbol={symbol} rows={written}')
+        stats = merge_ohlcv_csv(out_path, rows)
+        print(f'OK symbol={symbol} fetched={stats.fetched} inserted={stats.inserted} updated={stats.updated} cache_rows={stats.total_rows}')
     return 0
 
 

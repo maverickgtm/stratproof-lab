@@ -23,13 +23,13 @@
 <div class="grid">
   <section class="panel">
     <h2>1) Data Setup</h2>
-    <div class="small">Use public OHLCV data from Bybit/Binance or generate synthetic cache for offline tests. No API keys, no broker permissions.</div>
+    <div class="small">Use public OHLCV data from Bybit, Binance, OKX, Coinbase or Kraken, or generate synthetic cache for offline tests. No API keys, no broker permissions.</div>
     <div class="row"><div><label>Provider</label><select id="provider" onchange="providerChanged()">
       <option value="bybit" data-status="live">Bybit — live downloader</option>
       <option value="binance" data-status="live">Binance — live downloader</option>
-      <option value="okx" data-status="roadmap">OKX — roadmap connector</option>
-      <option value="coinbase" data-status="roadmap">Coinbase — roadmap connector</option>
-      <option value="kraken" data-status="roadmap">Kraken — roadmap connector</option>
+      <option value="okx" data-status="live">OKX — live downloader</option>
+      <option value="coinbase" data-status="live">Coinbase — live spot downloader</option>
+      <option value="kraken" data-status="live">Kraken — live spot downloader</option>
       <option value="kucoin" data-status="roadmap">KuCoin — roadmap connector</option>
       <option value="bitfinex" data-status="roadmap">Bitfinex — roadmap connector</option>
       <option value="bitstamp" data-status="roadmap">Bitstamp — roadmap connector</option>
@@ -42,7 +42,7 @@
       <option value="interactive_brokers" data-status="roadmap">Interactive Brokers — roadmap connector</option>
       <option value="mt5" data-status="import">MT5 / MT4 export import</option>
       <option value="csv" data-status="import">CSV / local import — community path</option>
-    </select><div id="providerNote" class="providerNote">Bybit and Binance can download public OHLCV now. Other providers are listed as connector roadmap/import targets.</div></div><div><label>Market type</label><select id="market_type"><option>linear</option><option>spot</option><option>usdm</option></select></div></div>
+    </select><div id="providerNote" class="providerNote">Five Community connectors can download public OHLCV now. Coinbase and Kraken use spot candles only.</div></div><div><label>Market type</label><select id="market_type"><option>linear</option><option>spot</option><option>usdm</option></select></div></div>
     <label>Top symbols</label>
     <div id="symbolPicker" class="symbolPicker"></div>
     <label>Custom / rare symbols</label>
@@ -140,16 +140,27 @@ function sideChanged(){
   }
   sel.dataset.previousSide = sel.value;
   notice.classList.remove('show');
-  buildIdeaJson(false);
 }
 function providerChanged(){
   const sel=document.getElementById('provider');
   const opt=sel.options[sel.selectedIndex];
   const status=opt?.dataset?.status || 'roadmap';
   const note=document.getElementById('providerNote');
-  if(status==='live') note.textContent = `${opt.textContent.split('—')[0].trim()} can download public OHLCV in this Community preview.`;
+  const marketType=document.getElementById('market_type');
+  const spotOnly=['coinbase','kraken'].includes(sel.value);
+  [...marketType.options].forEach(option=>{ option.disabled=spotOnly && option.value!=='spot'; });
+  if(spotOnly) marketType.value='spot';
+  const supportedTimeframes=sel.value==='coinbase' ? ['1m','5m','15m','1h','1d'] : sel.value==='kraken' ? ['1m','5m','15m','30m','1h','4h','1d'] : null;
+  ['timeframe','context_timeframe'].forEach(id=>{
+    const field=document.getElementById(id);
+    [...field.options].forEach(option=>{ option.disabled=Boolean(supportedTimeframes) && !supportedTimeframes.includes(option.value); });
+    if(supportedTimeframes && !supportedTimeframes.includes(field.value)) field.value='5m';
+  });
+  if(status==='live' && spotOnly) note.textContent = `${opt.textContent.split('—')[0].trim()} downloads completed public spot OHLCV candles only.`;
+  else if(status==='live') note.textContent = `${opt.textContent.split('—')[0].trim()} can download public OHLCV in Community v2.`;
   else if(status==='import') note.textContent = 'CSV/local import is the safest universal path for unsupported exchanges and fiat/legacy platforms.';
-  else note.textContent = `${opt.textContent.split('—')[0].trim()} is listed in the connector roadmap. For now, use CSV import/offline cache or Bybit/Binance live download.`;
+  else note.textContent = `${opt.textContent.split('—')[0].trim()} is listed in the connector roadmap. For now, use CSV import/offline cache or one of the five live public downloads.`;
+  buildIdeaJson(false);
 }
 function operatorOptions(indicator, selected){
   const ops = {
@@ -183,6 +194,7 @@ let lastRelaxedAudit = null;
 const topSymbols=['BTCUSDT','ETHUSDT','SOLUSDT','BNBUSDT','XRPUSDT','DOGEUSDT','ADAUSDT','AVAXUSDT','LINKUSDT','HYPEUSDT'];
 
 function normalizeSymbolList(items){ const seen=new Set(); return (items||[]).map(s=>String(s||'').trim().toUpperCase()).filter(Boolean).filter(s=>{ if(seen.has(s)) return false; seen.add(s); return true; }); }
+function escapeHtml(value){ return String(value ?? '').replace(/[&<>"']/g, ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
 function selectedSymbols(){ const checked=[...document.querySelectorAll('.symbolCheck:checked')].map(x=>x.value); const custom=(document.getElementById('custom_symbols')?.value||'').split(','); return normalizeSymbolList([...checked,...custom]); }
 function syncSymbolsFromPicker(){ const list=selectedSymbols(); document.getElementById('symbols').value=list.join(','); return list; }
 function renderSymbolPicker(){ const current=normalizeSymbolList((document.getElementById('symbols').value||'SOLUSDT,ETHUSDT').split(',')); const box=document.getElementById('symbolPicker'); box.innerHTML=topSymbols.map(sym=>`<label class="symbolChip"><input class="symbolCheck" type="checkbox" value="${sym}" ${current.includes(sym)?'checked':''} onchange="syncSymbolsFromPicker(); buildIdeaJson();"> ${sym}</label>`).join(''); syncSymbolsFromPicker(); }
@@ -206,7 +218,7 @@ function renderEvidenceLadder(){
     else { interpretation='Both strict and relaxed audits have usable samples. Compare Net R, drawdown, and threshold behavior before promotion.'; cls='ok'; }
   } else if(strict){ interpretation='Strict audit completed. Run relaxed audit next to diagnose sample starvation.'; cls='muted'; }
   else { interpretation='Relaxed audit completed. Run strict audit to compare against the original formula.'; cls='muted'; }
-  box.innerHTML=`<div class="pill">Strict known: ${strict?fmtNumber(strict.known):'not run'}</div><div class="pill">Relaxed known: ${relaxed?fmtNumber(relaxed.known):'not run'}</div><div class="pill">Strict WR: ${strict?fmtNumber(strict.winrate_pct)+'%':'not run'}</div><div class="pill">Relaxed WR: ${relaxed?fmtNumber(relaxed.winrate_pct)+'%':'not run'}</div><div class="pill">Strict Net R: ${strict?fmtNumber(strict.net_r_simple):'not run'}</div><div class="pill">Relaxed Net R: ${relaxed?fmtNumber(relaxed.net_r_simple):'not run'}</div><div class="pill">Strict verdict: ${strict?fmtNumber(strict.verdict):'not run'}</div><div class="pill">Relaxed verdict: ${relaxed?fmtNumber(relaxed.verdict):'not run'}</div><div class="small ${cls}" style="margin-top:8px">${interpretation}</div>`;
+  box.innerHTML=`<div class="pill">Strict known: ${escapeHtml(strict?fmtNumber(strict.known):'not run')}</div><div class="pill">Relaxed known: ${escapeHtml(relaxed?fmtNumber(relaxed.known):'not run')}</div><div class="pill">Strict WR: ${escapeHtml(strict?fmtNumber(strict.winrate_pct)+'%':'not run')}</div><div class="pill">Relaxed WR: ${escapeHtml(relaxed?fmtNumber(relaxed.winrate_pct)+'%':'not run')}</div><div class="pill">Strict Net R: ${escapeHtml(strict?fmtNumber(strict.net_r_simple):'not run')}</div><div class="pill">Relaxed Net R: ${escapeHtml(relaxed?fmtNumber(relaxed.net_r_simple):'not run')}</div><div class="pill">Strict verdict: ${escapeHtml(strict?fmtNumber(strict.verdict):'not run')}</div><div class="pill">Relaxed verdict: ${escapeHtml(relaxed?fmtNumber(relaxed.verdict):'not run')}</div><div class="small ${cls}" style="margin-top:8px">${escapeHtml(interpretation)}</div>`;
 }
 
 function timeframeSelectHtml(i, b){
@@ -225,7 +237,7 @@ function extraFieldHtml(i, b){
   return b.indicator==='RELATIVE_VOLUME' ? lookbackInputHtml(i,b) : timeframeSelectHtml(i,b);
 }
 
-function renderBlocks(){ const box=document.getElementById('blocks'); box.innerHTML=''; blocks.forEach((b,i)=>{ b.operator=normalizeOperator(b.indicator,b.operator); const row=document.createElement('div'); row.className='block-row'; row.innerHTML=`<div class="block-field"><label>Indicator</label><select title="Indicator" onchange="blocks[${i}].indicator=this.value; blocks[${i}].operator=normalizeOperator(this.value, blocks[${i}].operator); renderBlocks(); buildIdeaJson();"><option ${b.indicator==='RSI'?'selected':''}>RSI</option><option ${b.indicator==='BTC_EMA'?'selected':''}>BTC_EMA</option><option ${b.indicator==='RELATIVE_VOLUME'?'selected':''}>RELATIVE_VOLUME</option><option ${b.indicator==='EMA'?'selected':''}>EMA</option></select></div><div class="block-field"><label>Operator</label><select title="Operator" onchange="blocks[${i}].operator=this.value; buildIdeaJson();">${operatorOptions(b.indicator,b.operator)}</select></div><div class="block-field"><label>Value / Period</label><input title="Value or indicator period" value="${b.value ?? b.period ?? b.multiplier ?? ''}" onchange="setBlockValue(${i},this.value)"></div><div class="block-field"><label>${extraFieldLabel(b.indicator)}</label>${extraFieldHtml(i,b)}</div><button class="removeBlockBtn" aria-label="Remove block" title="Remove block" onclick="blocks.splice(${i},1);renderBlocks();buildIdeaJson()">×</button>`; box.appendChild(row); }); }
+function renderBlocks(){ const box=document.getElementById('blocks'); box.innerHTML=''; blocks.forEach((b,i)=>{ b.operator=normalizeOperator(b.indicator,b.operator); const row=document.createElement('div'); row.className='block-row'; row.innerHTML=`<div class="block-field"><label>Indicator</label><select title="Indicator" onchange="blocks[${i}].indicator=this.value; blocks[${i}].operator=normalizeOperator(this.value, blocks[${i}].operator); renderBlocks(); buildIdeaJson();"><option ${b.indicator==='RSI'?'selected':''}>RSI</option><option ${b.indicator==='BTC_EMA'?'selected':''}>BTC_EMA</option><option ${b.indicator==='RELATIVE_VOLUME'?'selected':''}>RELATIVE_VOLUME</option><option ${b.indicator==='EMA'?'selected':''}>EMA</option></select></div><div class="block-field"><label>Operator</label><select title="Operator" onchange="blocks[${i}].operator=this.value; buildIdeaJson();">${operatorOptions(b.indicator,b.operator)}</select></div><div class="block-field"><label>Value / Period</label><input title="Value or indicator period" value="${escapeHtml(b.value ?? b.period ?? b.multiplier ?? '')}" onchange="setBlockValue(${i},this.value)"></div><div class="block-field"><label>${escapeHtml(extraFieldLabel(b.indicator))}</label>${extraFieldHtml(i,b)}</div><button class="removeBlockBtn" aria-label="Remove block" title="Remove block" onclick="blocks.splice(${i},1);renderBlocks();buildIdeaJson()">×</button>`; box.appendChild(row); }); }
 function setBlockValue(i,v){ const b=blocks[i]; const n=Number(v); if(b.indicator==='RSI') b.value=n; else if(b.indicator==='RELATIVE_VOLUME') b.multiplier=n; else b.period=n; buildIdeaJson(); }
 function setBlockExtra(i,v){ const b=blocks[i]; if(b.indicator==='RELATIVE_VOLUME') b.lookback=Number(v)||20; else b.timeframe=v; buildIdeaJson(); }
 function addBlock(kind){
@@ -250,14 +262,14 @@ function getCurrentIdeaOrRebuild(context){ const raw=document.getElementById('id
 function thresholdList(){ return document.getElementById('thresholds').value.split(',').map(x=>Number(x.trim())).filter(x=>!isNaN(x)); }
 async function generateDemoCache(){ try{ log('Generating offline cache...'); const data=await api('/api/generate_demo_cache',{symbols:syncSymbolsFromPicker().join(','),timeframe:document.getElementById('timeframe').value,context_timeframe:document.getElementById('context_timeframe').value}); log('Demo cache generated: '+(data.ok?'PASS':'FAIL')); }catch(e){log('ERROR '+e.message)} }
 async function downloadHistory(){ try{ log('Downloading public history...'); const data=await api('/api/download_history',{provider:provider.value,market_type:market_type.value,symbols:syncSymbolsFromPicker().join(','),timeframe:timeframe.value,context_timeframe:context_timeframe.value,days:Number(days.value),limit:Number(limit.value),include_btc_context:true}); log('Download complete: '+(data.ok?'PASS':'FAIL')+'\n'+data.commands.map(c=>c.stdout||c.stderr).join('\n')); }catch(e){log('DOWNLOAD ERROR '+e.message+' — if internet/provider blocks it, use Generate offline demo cache.')} }
-function renderAuditResult(data, label){ const o=data.report.overall||{}; if(label.toLowerCase().startsWith('strict')) lastStrictAudit=data; if(label.toLowerCase().startsWith('relaxed')) lastRelaxedAudit=data; verdict.textContent=o.verdict||'—'; winrate.textContent=(o.winrate_pct??'—')+'%'; netr.textContent=(o.net_r_simple??'—'); const diag=o.sample_diagnostics||{}; resultStatus.innerHTML=`<span class="ok">${label} complete.</span><br>Known=${o.known}, Wins=${o.wins}, Losses=${o.losses}, Signals=${o.signals_total}<br><span class="muted">Reports are ready below.</span>`; const reasons=(diag.reasons||[]).map(x=>`<li>${x}</li>`).join(''); const recs=(diag.recommended_next_tests||[]).map(x=>`<li>${x}</li>`).join(''); guidance.innerHTML = diag.sample_status ? `<div class="pill">${diag.sample_status}</div><div class="small"><b>Why:</b><ul>${reasons}</ul><b>Next tests:</b><ul>${recs}</ul></div>` : '<span class="muted">No extra guidance needed.</span>'; renderEvidenceLadder(); links.innerHTML=`${data.report_html_url?`<a class="reportHeroLink" href="${data.report_html_url}" target="_blank">✨ Open visual evidence report</a>`:''}<a href="${data.report_md_url}" target="_blank">📄 Open Markdown report</a><a href="${data.report_json_url}" target="_blank">{} Open JSON report</a><a href="${data.threshold_md_url}" target="_blank">📊 Open threshold comparison</a><div class="pill">Markdown: ${data.report_md}</div>`; symbolResults.innerHTML=(data.report.symbol_results||[]).map(r=>`<div class="pill">${r.symbol} ${r.side}: ${r.known} known · WR ${r.winrate_pct}% · Net ${r.net_r_simple} · ${r.verdict}</div>`).join('') || '<span class="muted">No symbol results available yet.</span>'; log(`${label} PASS: ${o.verdict||''} · known=${o.known} · Markdown report: /${data.report_md}`); }
+function renderAuditResult(data, label){ const o=data.report.overall||{}; if(label.toLowerCase().startsWith('strict')) lastStrictAudit=data; if(label.toLowerCase().startsWith('relaxed')) lastRelaxedAudit=data; verdict.textContent=o.verdict||'—'; winrate.textContent=(o.winrate_pct??'—')+'%'; netr.textContent=(o.net_r_simple??'—'); const diag=o.sample_diagnostics||{}; resultStatus.innerHTML=`<span class="ok">${escapeHtml(label)} complete.</span><br>Known=${escapeHtml(o.known)}, Wins=${escapeHtml(o.wins)}, Losses=${escapeHtml(o.losses)}, Signals=${escapeHtml(o.signals_total)}<br><span class="muted">Reports are ready below.</span>`; const reasons=(diag.reasons||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join(''); const recs=(diag.recommended_next_tests||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join(''); guidance.innerHTML = diag.sample_status ? `<div class="pill">${escapeHtml(diag.sample_status)}</div><div class="small"><b>Why:</b><ul>${reasons}</ul><b>Next tests:</b><ul>${recs}</ul></div>` : '<span class="muted">No extra guidance needed.</span>'; renderEvidenceLadder(); links.innerHTML=`${data.report_html_url?`<a class="reportHeroLink" href="${encodeURI(data.report_html_url)}" target="_blank">Open visual evidence report</a>`:''}<a href="${encodeURI(data.report_md_url)}" target="_blank">Open Markdown report</a><a href="${encodeURI(data.report_json_url)}" target="_blank">Open JSON report</a><a href="${encodeURI(data.threshold_md_url)}" target="_blank">Open threshold comparison</a><div class="pill">Markdown: ${escapeHtml(data.report_md)}</div>`; symbolResults.innerHTML=(data.report.symbol_results||[]).map(r=>`<div class="pill">${escapeHtml(r.symbol)} ${escapeHtml(r.side)}: ${escapeHtml(r.known)} known · WR ${escapeHtml(r.winrate_pct)}% · Net ${escapeHtml(r.net_r_simple)} · ${escapeHtml(r.verdict)}</div>`).join('') || '<span class="muted">No symbol results available yet.</span>'; log(`${label} PASS: ${o.verdict||''} · known=${o.known} · Markdown report: /${data.report_md}`); }
 async function runAudit(){ try{ const idea=getCurrentIdeaOrRebuild('Strict audit'); const th=thresholdList(); log('Running strict audit...'); const data=await api('/api/audit_idea',{idea:idea,thresholds:th}); renderAuditResult(data, 'Strict audit'); return data; }catch(e){log('AUDIT ERROR '+e.message); return null;} }
 async function runRelaxedAudit(){ try{ const idea=getCurrentIdeaOrRebuild('Relaxed audit'); const th=thresholdList(); log('Running relaxed discovery audit...'); const data=await api('/api/relaxed_audit',{idea:idea,thresholds:th}); renderAuditResult(data, 'Relaxed discovery audit'); log('Relaxed audit is for sample-size discovery only. Final evidence must use the strict formula.'); return data; }catch(e){log('RELAXED AUDIT ERROR '+e.message); return null;} }
 async function runEvidenceLadderPair(){ log('Running strict + relaxed evidence ladder...'); const strict=await runAudit(); const relaxed=await runRelaxedAudit(); if(strict && relaxed){ log('Evidence ladder complete: strict known='+(strict.report.overall.known||0)+' · relaxed known='+(relaxed.report.overall.known||0)); }}
 async function saveCurrentIdea(){ try{ const idea=getCurrentIdeaOrRebuild('Save idea'); const data=await api('/api/save_idea',{idea}); log('Saved idea '+data.idea_hash.slice(0,12)); loadSavedIdeas(); }catch(e){log('SAVE ERROR '+e.message)} }
-async function loadSavedIdeas(){ try{ const res=await fetch('/api/saved_ideas'); const data=await res.json(); savedIdeas.innerHTML=(data.ideas||[]).map(x=>`<div class="pill" onclick="loadIdea('${x.idea_hash}')">${x.title} · ${x.idea_hash.slice(0,8)}</div>`).join('') || '<span class="muted">No saved ideas yet.</span>'; }catch(e){log('SAVED IDEAS ERROR '+e.message)} }
+async function loadSavedIdeas(){ try{ const res=await fetch('/api/saved_ideas'); const data=await res.json(); savedIdeas.innerHTML=(data.ideas||[]).map(x=>`<div class="pill" onclick="loadIdea('${escapeHtml(x.idea_hash)}')">${escapeHtml(x.title)} · ${escapeHtml(x.idea_hash.slice(0,8))}</div>`).join('') || '<span class="muted">No saved ideas yet.</span>'; }catch(e){log('SAVED IDEAS ERROR '+e.message)} }
 async function loadIdea(hash){ const res=await fetch('/api/load_idea?hash='+encodeURIComponent(hash)); const data=await res.json(); if(data.idea && data.idea.builder){ document.getElementById('idea_json').value=JSON.stringify(data.idea.builder,null,2); blocks=data.idea.builder.blocks||[]; renderBlocks(); log('Loaded saved idea '+hash.slice(0,12)); }}
-window.addEventListener('load',()=>{ providerChanged(); document.getElementById('side').dataset.previousSide=document.getElementById('side').value; renderSymbolPicker(); addBlock('RSI'); addBlock('BTC_EMA'); addBlock('RELATIVE_VOLUME'); buildIdeaJson(); loadSavedIdeas(); fetch('/api/status').then(r=>r.json()).then(s=>log('Workbench ready at '+s.project_root)); });
+window.addEventListener('load',()=>{ document.getElementById('side').dataset.previousSide=document.getElementById('side').value; renderSymbolPicker(); providerChanged(); addBlock('RSI'); addBlock('BTC_EMA'); addBlock('RELATIVE_VOLUME'); buildIdeaJson(); loadSavedIdeas(); fetch('/api/status').then(r=>r.json()).then(s=>log('Workbench ready at '+s.project_root)); });
 </script>
 </body>
 </html>

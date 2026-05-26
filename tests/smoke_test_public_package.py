@@ -29,6 +29,10 @@ MODULES = [
     'app.formula_builder.ui_schema',
     'app.evidence_reports.builder',
     'app.provider_connectors.base',
+    'app.provider_connectors.okx',
+    'app.provider_connectors.coinbase',
+    'app.provider_connectors.kraken',
+    'app.provider_connectors.local_store',
 ]
 
 

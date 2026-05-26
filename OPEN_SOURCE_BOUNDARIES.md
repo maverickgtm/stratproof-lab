@@ -9,7 +9,8 @@ This repository is intended to represent the public Community Edition of StratPr
 - Research Brain View
 - basic multilingual UI strings
 - public provider connector interfaces
-- basic Bybit/Binance/public-data examples
+- public historical OHLCV connectors for Bybit, Binance, OKX, Coinbase Exchange, and Kraken
+- duplicate-safe local candle storage and completed-candle audit safeguards
 - CSV import wizard
 - demo Idea Lab backtest runner
 - indicator block catalog

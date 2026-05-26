@@ -2,14 +2,15 @@
 
 ## Now
 - Crypto strategy audit workflows
-- Public OHLCV connectors
+- Public OHLCV connectors for Bybit, Binance, OKX, Coinbase Exchange, and Kraken
+- Duplicate-safe cache writes and completed-candle safeguards
 - CSV import
 - Formula Builder
 - Evidence Reports
 - Research Brain View
 
 ## Next
-- Stronger normalized data validation
+- Provider-health diagnostics and cross-exchange comparison reports
 - More indicators
 - Walk-forward reports
 - Dockerized demo

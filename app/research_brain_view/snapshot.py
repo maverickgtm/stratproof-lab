@@ -120,7 +120,7 @@ def build_snapshot(db_path: str | Path | None = None) -> BrainSnapshot:
         }
         departments = [
             DepartmentStatus("setup", "Setup Department", "DEMO", 0.8, "Demo mode: configure audits without live data."),
-            DepartmentStatus("data", "Data Setup Department", "DEMO", 0.74, "Connect Bybit/Binance/CSV to build a dataset."),
+            DepartmentStatus("data", "Data Setup Department", "DEMO", 0.74, "Connect one of five public exchange feeds or CSV to build a dataset."),
             DepartmentStatus("idea_lab", "Research University Idea Lab", "DEMO", 0.7, "Submit ideas to generate hypotheses."),
             DepartmentStatus("truth", "Truth Engine", "WAIT", 0.5, "Waiting for OHLCV and signals."),
             DepartmentStatus("risk", "RiskGuard / Net R", "WAIT", 0.5, "Waiting for audit results."),
