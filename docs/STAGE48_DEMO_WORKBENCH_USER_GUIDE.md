@@ -98,7 +98,13 @@ Then follow this order:
     - Open JSON report.
     - Open threshold comparison.
 
-12. Save useful ideas.
+12. Download the audit trail.
+    - Download the detected operations ledger CSV.
+    - Download the linked source candle-path CSV.
+    - For eligible closed `LONG` spot replays, download the TradingView Portfolio replay CSV for chart visualization.
+    - These exports document historical replay detections, not executed account trades.
+
+13. Save useful ideas.
     - Use **Save Idea** after building a formula worth revisiting.
 
 ## Area guide
@@ -135,6 +141,7 @@ This area shows the latest audit results.
 - Evidence guidance: explains why more data may be needed.
 - Strict vs relaxed ladder: compares original formula vs discovery probe.
 - Latest reports: opens visual/Markdown/JSON/threshold outputs.
+- Audit Trail Downloads: exports no more than three CSV files for operation-level and candle-level verification.
 - Symbol results: shows per-symbol outcome summaries.
 
 ## How to explain strict vs relaxed

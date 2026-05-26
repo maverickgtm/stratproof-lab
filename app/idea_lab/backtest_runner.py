@@ -11,7 +11,7 @@ import hashlib
 import json
 import math
 import time
-from dataclasses import dataclass, asdict
+from dataclasses import dataclass, asdict, field
 from datetime import datetime, timezone
 from pathlib import Path
 from statistics import mean
@@ -37,6 +37,8 @@ class Candle:
     timeframe: str = ""
     provider: str = ""
     market_type: str = ""
+    source: str = ""
+    metadata_json: str = ""
 
 
 @dataclass
@@ -89,6 +91,7 @@ class IdeaAuditReport:
     symbol_results: list[dict[str, Any]]
     warnings: list[str]
     report_markdown: str | None = None
+    detected_operations: list[dict[str, Any]] = field(default_factory=list)
 
 
 def load_idea(path: str | Path) -> dict[str, Any]:
@@ -123,8 +126,10 @@ def read_ohlcv_csv(path: str | Path) -> list[Candle]:
                         volume=float(r.get("volume") or r.get("Volume") or 0),
                         symbol=str(r.get("symbol") or r.get("Symbol") or path.parent.name).upper(),
                         timeframe=str(r.get("timeframe") or path.stem),
-                        provider=str(r.get("provider") or path.parents[2].name if len(path.parents) > 2 else "local"),
+                        provider=str(r.get("provider") or (path.parents[2].name if len(path.parents) > 2 else "local")),
                         market_type=str(r.get("market_type") or "unknown"),
+                        source=str(r.get("source") or ""),
+                        metadata_json=str(r.get("metadata_json") or ""),
                     )
                 )
             except Exception:
@@ -399,7 +404,8 @@ def run_idea_backtest(
     cached_path = research_cache_dir / f"{idea_hash}.json"
     if use_cache and cached_path.exists():
         data = json.loads(cached_path.read_text(encoding="utf-8"))
-        return IdeaAuditReport(**data)
+        if "detected_operations" in data:
+            return IdeaAuditReport(**data)
 
     warnings: list[str] = []
     symbol_results: list[dict[str, Any]] = []
@@ -480,6 +486,7 @@ def run_idea_backtest(
         "no_touch": sum(1 for s in all_signals if s.result == "NO_TOUCH"),
         "duplicate_rate_pct": duplicate_rate(all_signals),
         "verdict": overall_verdict,
+        "replay_horizon_candles": horizon,
     }
     # Stage 38: attach evidence/sufficiency guidance for UX and reports.
     # It is intentionally user-facing and audit-only.
@@ -499,6 +506,7 @@ def run_idea_backtest(
         symbol_results=symbol_results,
         warnings=warnings,
         report_markdown=None,
+        detected_operations=[asdict(signal) for signal in all_signals],
     )
     report.overall["sample_diagnostics"] = build_sample_sufficiency_guidance(report, idea)
     report.report_markdown = render_markdown_report(report, idea)

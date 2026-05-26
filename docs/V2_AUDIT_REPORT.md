@@ -31,6 +31,16 @@ Community v2 provides an audit-only path from five public crypto candle feeds in
 
 No connector places orders or requires exchange trading credentials.
 
+## Audit Trail Exports Delivered
+
+Community v2 now produces a maximum of three CSV evidence artifacts after each formula audit:
+
+1. A detected-operations ledger containing each replay detection, its formula trace and outcome.
+2. A candle-path export linking each detection to the stored public OHLCV evidence used to classify it.
+3. A TradingView Portfolio-format replay export for eligible closed `LONG` spot records only.
+
+This addresses a core trust question: a user can inspect what generated the summary statistics. The TradingView-format output is a visualization aid, not independent formula validation or proof of executed trading.
+
 ## Competitive Position
 
 Large open-source competitors are already strong where StratProof should not pretend to win immediately:
@@ -50,7 +60,7 @@ The highest-value next feature is a **Cross-Exchange Evidence Comparison** repor
 3. Flag results that are strong on only one venue as venue-dependent evidence.
 4. Export a reproducible comparison report with source, timeframe and dataset fingerprints.
 
-That feature turns the new v2 connector work into a unique user action rather than simply a larger provider list.
+That feature builds on the downloadable audit trail by testing whether the same formula evidence is consistent across independent venues.
 
 ## Evidence Boundary
 

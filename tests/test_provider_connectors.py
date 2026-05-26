@@ -11,6 +11,7 @@ from app.provider_connectors.base import NormalizedOHLCV, ProviderRequest
 from app.provider_connectors.factory import get_connector
 from app.provider_connectors.local_store import cache_path, merge_ohlcv_csv
 from app.idea_lab.backtest_runner import run_idea_backtest
+from app.idea_lab.evidence_export import export_audit_evidence_csvs, TRADINGVIEW_HEADERS
 
 
 class FakeResponse:
@@ -89,11 +90,11 @@ class ConnectorTests(unittest.TestCase):
 
 
 class LocalStoreTests(unittest.TestCase):
-    def candle(self, timestamp: int, close: float) -> NormalizedOHLCV:
+    def candle(self, timestamp: int, close: float, source: str = "test") -> NormalizedOHLCV:
         return NormalizedOHLCV(
             provider="okx", market_type="spot", symbol="BTCUSDT", timeframe="5m",
             timestamp=timestamp, open=1.0, high=3.0, low=0.5, close=close,
-            volume=10.0, source="test", metadata={"confirmed": True},
+            volume=10.0, source=source, metadata={"confirmed": True},
         )
 
     def test_repeated_download_does_not_duplicate_candles(self) -> None:
@@ -133,6 +134,74 @@ class LocalStoreTests(unittest.TestCase):
             self.assertEqual(report.provider, "okx")
             self.assertNotEqual(report.symbol_results[0]["verdict"], "NO_DATA")
             self.assertGreater(report.overall["signals_total"], 0)
+            self.assertEqual(len(report.detected_operations), report.overall["signals_total"])
+
+    def test_audit_exports_three_traceable_csv_files_and_tradingview_spot_replay(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = cache_path(directory, "okx", "spot", "BTCUSDT", "5m")
+            candles = [self.candle(1_700_000_000 + index * 300, 100.0 + index / 10) for index in range(90)]
+            merge_ohlcv_csv(path, candles)
+            idea = {
+                "name": "Evidence export",
+                "exchange": "okx", "market_type": "spot", "symbols": ["BTCUSDT"],
+                "timeframe": "5m", "timezone": "UTC", "session": "ALL", "side": "LONG",
+                "score_threshold": 0,
+                "blocks": [{"indicator": "RSI", "period": 14, "operator": "<", "value": 101}],
+            }
+            report = run_idea_backtest(idea, project_root=directory, market_cache_root=directory, use_cache=False)
+            exports = export_audit_evidence_csvs(report, idea, Path(directory) / "reports", project_root=directory)
+            self.assertEqual(len(exports), 3)
+            self.assertGreater(exports[0]["rows"], 0)
+            self.assertGreater(exports[1]["rows"], exports[0]["rows"])
+            self.assertGreater(exports[2]["rows"], 0)
+            with exports[0]["path"].open(newline="", encoding="utf-8") as input_file:
+                operations = list(csv.DictReader(input_file))
+            self.assertEqual(operations[0]["detection_type"], "HISTORICAL_REPLAY_DETECTION")
+            self.assertEqual(operations[0]["source"], "test")
+            self.assertEqual(operations[0]["market_evidence_class"], "STORED_HISTORICAL_MARKET_DATA")
+            self.assertIn("not an executed account trade", operations[0]["evidence_disclaimer"])
+            with exports[1]["path"].open(newline="", encoding="utf-8") as input_file:
+                candle_evidence = list(csv.DictReader(input_file))
+            self.assertEqual(candle_evidence[0]["source"], "test")
+            self.assertEqual(candle_evidence[0]["role"], "ENTRY")
+            with exports[2]["path"].open(newline="", encoding="utf-8") as input_file:
+                tradingview_reader = csv.DictReader(input_file)
+                tradingview_rows = list(tradingview_reader)
+                self.assertEqual(tradingview_reader.fieldnames, TRADINGVIEW_HEADERS)
+            self.assertEqual({row["Side"] for row in tradingview_rows}, {"buy", "sell"})
+            self.assertRegex(tradingview_rows[0]["Closing Time"], r"^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$")
+
+    def test_tradingview_export_is_empty_for_short_or_derivative_replays(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = cache_path(directory, "okx", "linear", "BTCUSDT", "5m")
+            merge_ohlcv_csv(path, [self.candle(1_700_000_000 + index * 300, 100.0) for index in range(90)])
+            idea = {
+                "exchange": "okx", "market_type": "linear", "symbols": ["BTCUSDT"],
+                "timeframe": "5m", "session": "ALL", "side": "SHORT", "score_threshold": 0,
+                "blocks": [{"indicator": "RSI", "period": 14, "operator": "<", "value": 101}],
+            }
+            report = run_idea_backtest(idea, project_root=directory, market_cache_root=directory, use_cache=False)
+            exports = export_audit_evidence_csvs(report, idea, Path(directory) / "reports", project_root=directory)
+            self.assertEqual(exports[2]["rows"], 0)
+
+    def test_audit_export_labels_synthetic_demo_as_non_market_evidence(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            path = cache_path(directory, "bybit", "spot", "BTCUSDT", "5m")
+            merge_ohlcv_csv(
+                path,
+                [self.candle(1_700_000_000 + index * 300, 100.0, "stage13_demo_synthetic") for index in range(90)],
+            )
+            idea = {
+                "exchange": "bybit", "market_type": "spot", "symbols": ["BTCUSDT"],
+                "timeframe": "5m", "session": "ALL", "side": "LONG", "score_threshold": 0,
+                "blocks": [{"indicator": "RSI", "period": 14, "operator": "<", "value": 101}],
+            }
+            report = run_idea_backtest(idea, project_root=directory, market_cache_root=directory, use_cache=False)
+            exports = export_audit_evidence_csvs(report, idea, Path(directory) / "reports", project_root=directory)
+            with exports[0]["path"].open(newline="", encoding="utf-8") as input_file:
+                operation = next(csv.DictReader(input_file))
+            self.assertEqual(operation["market_evidence_class"], "SYNTHETIC_DEMO")
+            self.assertIn("not real market evidence", operation["evidence_disclaimer"])
 
     def test_high_rsi_period_fails_closed_instead_of_crashing(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

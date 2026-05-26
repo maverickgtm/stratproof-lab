@@ -12,6 +12,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from app.idea_lab.backtest_runner import load_idea, run_idea_backtest
+from app.idea_lab.evidence_export import export_audit_evidence_csvs
 from app.idea_lab.score_threshold_simulator import render_threshold_markdown, simulate_thresholds
 
 
@@ -38,6 +39,7 @@ def main() -> int:
     base_md = out_dir / f"{report.idea_hash}_stage13_report.md"
     base_json.write_text(json.dumps(asdict(report), ensure_ascii=False, indent=2), encoding="utf-8")
     base_md.write_text(report.report_markdown or "", encoding="utf-8")
+    evidence_csvs = export_audit_evidence_csvs(report, idea, out_dir, project_root=root)
 
     rows = simulate_thresholds(idea, parse_thresholds(args.thresholds), project_root=root, use_cache=False)
     comp_json = out_dir / f"{report.idea_hash}_threshold_comparison.json"
@@ -49,6 +51,8 @@ def main() -> int:
     print(f"REPORT_MD={base_md}")
     print(f"THRESHOLD_COMPARISON_JSON={comp_json}")
     print(f"THRESHOLD_COMPARISON_MD={comp_md}")
+    for evidence_export in evidence_csvs:
+        print(f"EVIDENCE_CSV_{evidence_export['kind'].upper()}={evidence_export['path']}")
     print(f"VERDICT={report.overall.get('verdict')}")
     print(f"WARNINGS={len(report.warnings)}")
     return 0

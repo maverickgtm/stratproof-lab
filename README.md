@@ -26,7 +26,9 @@ The v2 integrity rules are intentionally strict:
 - Coinbase and Kraken are spot-only in the public Community downloader;
 - every connector is audit-only and uses no API key or trading permission.
 
-See [Public connector evidence policy](docs/V2_PUBLIC_CONNECTORS.md) for endpoint and market-coverage details, and [v2 audit report](docs/V2_AUDIT_REPORT.md) for corrected findings and the next product direction.
+Every formula audit can now download an **Audit Trail Pack** of no more than three CSV files: a full detected-operations ledger, its supporting candle paths, and a TradingView Portfolio-compatible replay file for eligible closed `LONG` spot results. This makes the numbers inspectable while stating plainly that detections are replays, not executed trades, and labeling synthetic offline-demo inputs separately from stored market data.
+
+See [Public connector evidence policy](docs/V2_PUBLIC_CONNECTORS.md), [Audit Trail CSV exports](docs/V2_AUDIT_EVIDENCE_EXPORTS.md), and the [v2 audit report](docs/V2_AUDIT_REPORT.md) for details.
 
 ## See the audit workflow
 
@@ -198,6 +200,8 @@ The output is not only a raw backtest table. StratProof generates research cards
 - truth confidence,
 - threshold comparison,
 - warnings and blockers.
+
+It also exports a three-file audit trail so users can inspect each detected operation, trace the exact OHLCV path used by the replay, and visualize eligible spot replays through TradingView's documented Portfolio CSV import format.
 
 ### 6. Research Brain View
 

@@ -10,6 +10,7 @@ All notable public changes to StratProof Lab will be documented here.
 - Connector validation tests for normalized candle parsing and completed-candle safeguards.
 - An evidence-integrity cache merge policy that prevents repeated downloads from duplicating candle timestamps.
 - Live provider selection in the local Workbench for all five implemented Community connectors.
+- A three-file audit trail export pack: detected operations, supporting candle paths, and eligible TradingView Portfolio replay rows.
 
 ### Fixed
 
@@ -24,6 +25,7 @@ All notable public changes to StratProof Lab will be documented here.
 
 - Public data import remains audit-only: no API keys, order placement, signals, or broker execution.
 - Coinbase and Kraken Community downloads are spot-only; OKX supports public spot and USDT swap candle inputs.
+- TradingView-format exports visualize eligible closed `LONG` spot replays; they do not independently validate formula logic or prove executed trades.
 
 ## v0.1.0-community-preview
 

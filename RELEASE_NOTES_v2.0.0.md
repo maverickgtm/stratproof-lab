@@ -10,6 +10,7 @@ StratProof Lab v2 turns the Community Workbench into a multi-exchange evidence e
 - OKX unconfirmed candles and Kraken's documented current candle are removed from stored audit inputs.
 - Coinbase and Kraken are clearly limited to public spot candles in Community.
 - The Local Workbench exposes the implemented connectors and applies basic dynamic-output escaping.
+- Each formula audit offers up to three CSV audit-trail downloads: operation ledger, supporting candle path and eligible TradingView Portfolio replay import.
 - CI now tests connector parsing and the duplicate-safe cache policy.
 
 ## Safety Boundary
@@ -17,6 +18,7 @@ StratProof Lab v2 turns the Community Workbench into a multi-exchange evidence e
 - Audit-only and local-first.
 - No exchange API keys required for these public history downloads.
 - No broker permissions, signals, order placement, live execution, or managed funds.
+- TradingView Portfolio imports are visualization aids for eligible closed `LONG` spot historical replays, not independent trade execution confirmation.
 - Public exchange endpoint availability, regional restrictions, rate limits, instrument coverage, and historical depth still apply.
 
 ## Quick Test

@@ -33,6 +33,7 @@ MODULES = [
     'app.provider_connectors.coinbase',
     'app.provider_connectors.kraken',
     'app.provider_connectors.local_store',
+    'app.idea_lab.evidence_export',
 ]
 
 

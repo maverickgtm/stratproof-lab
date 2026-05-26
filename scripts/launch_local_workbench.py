@@ -25,6 +25,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from app.idea_lab.backtest_runner import run_idea_backtest
+from app.idea_lab.evidence_export import export_audit_evidence_csvs
 from app.idea_lab.score_threshold_simulator import simulate_thresholds, render_threshold_markdown
 from app.idea_lab.saved_ideas import save_idea, list_saved_ideas, load_saved_idea
 from app.idea_lab.indicator_library import block_catalog
@@ -285,12 +286,16 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
 
             if self.path == "/api/generate_demo_cache":
                 payload = read_body(self)
+                provider = str(payload.get("provider") or "bybit").lower()
+                market_type = str(payload.get("market_type") or "linear")
                 symbols = str(payload.get("symbols") or "SOLUSDT,ETHUSDT").upper().replace(" ", "")
                 timeframe = str(payload.get("timeframe") or "5m")
                 context_timeframe = str(payload.get("context_timeframe") or "15m")
                 rows = int(payload.get("rows") or 2400)
                 result = command([
                     sys.executable, "scripts/stage13_generate_multitimeframe_demo_cache.py",
+                    "--provider", provider,
+                    "--market-type", market_type,
                     "--symbols", symbols,
                     "--timeframe", timeframe,
                     "--context-timeframe", context_timeframe,
@@ -319,9 +324,12 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
                 report_md = REPORT_DIR / f"{report.idea_hash}_report.md"
                 report_html = REPORT_DIR / f"{report.idea_hash}_visual_report.html"
                 report_payload = json_safe(asdict(report))
+                browser_report_payload = dict(report_payload)
+                browser_report_payload.pop("detected_operations", None)
                 report_json.write_text(json.dumps(report_payload, ensure_ascii=False, indent=2, allow_nan=False), encoding="utf-8")
                 report_md.write_text(report.report_markdown or "", encoding="utf-8")
                 report_html.write_text(render_visual_report_html(report, idea), encoding="utf-8")
+                evidence_csvs = export_audit_evidence_csvs(report, idea, REPORT_DIR, project_root=PROJECT_ROOT)
                 rows = simulate_thresholds(idea, thresholds, project_root=PROJECT_ROOT, use_cache=False)
                 threshold_json = REPORT_DIR / f"{report.idea_hash}_thresholds.json"
                 threshold_md = REPORT_DIR / f"{report.idea_hash}_thresholds.md"
@@ -343,7 +351,16 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
                     "report_html_url": "/" + rel(report_html),
                     "threshold_json_url": "/" + rel(threshold_json),
                     "threshold_md_url": "/" + rel(threshold_md),
-                    "report": report_payload,
+                    "evidence_notice": "Detected operations are replay events over stored candles, not executed account trades. Offline demo candles remain synthetic.",
+                    "evidence_csvs": [
+                        {
+                            **{key: value for key, value in export.items() if key != "path"},
+                            "path": rel(export["path"]),
+                            "url": "/" + rel(export["path"]),
+                        }
+                        for export in evidence_csvs
+                    ],
+                    "report": browser_report_payload,
                     "thresholds": rows_payload,
                 })
                 return

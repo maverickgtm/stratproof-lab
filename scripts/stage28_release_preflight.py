@@ -27,6 +27,7 @@ REQUIRED = [
     "tests/test_provider_connectors.py",
     "docs/V2_PUBLIC_CONNECTORS.md",
     "docs/V2_AUDIT_REPORT.md",
+    "docs/V2_AUDIT_EVIDENCE_EXPORTS.md",
     "assets/github/screenshots/01_formula_builder_ui.png",
     "assets/github/screenshots/02_evidence_report_cards.png",
     "assets/github/screenshots/03_research_brain_view.png",
