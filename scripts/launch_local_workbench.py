@@ -12,13 +12,15 @@ import math
 import os
 import subprocess
 import sys
+import threading
 import time
 import webbrowser
 from dataclasses import asdict
+from datetime import datetime, timezone
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
-from urllib.parse import parse_qs, urlparse
+from urllib.parse import parse_qs, quote, urlparse
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
@@ -33,6 +35,11 @@ from app.idea_lab.indicator_library import block_catalog
 PORT_DEFAULT = 8765
 REPORT_DIR = PROJECT_ROOT / "reports" / "local_workbench"
 IDEA_DIR = PROJECT_ROOT / "data" / "local_workbench_ideas"
+HOSTED_DEMO_DAILY_CSV_LIMIT = max(0, int(os.environ.get("STRATPROOF_HOSTED_DEMO_DAILY_CSV_LIMIT") or 0))
+EXPORT_USAGE_FILE = Path(
+    os.environ.get("STRATPROOF_HOSTED_DEMO_USAGE_FILE") or REPORT_DIR / "hosted_demo_csv_usage.json"
+)
+EXPORT_USAGE_LOCK = threading.Lock()
 
 
 def json_safe(value: Any) -> Any:
@@ -72,6 +79,56 @@ def rel(path: Path) -> str:
         return str(path.relative_to(PROJECT_ROOT))
     except Exception:
         return str(path)
+
+
+def export_policy(consume: bool = False) -> dict[str, Any]:
+    """Return or consume a hosted-demo CSV slot; local Community remains unlimited."""
+    if HOSTED_DEMO_DAILY_CSV_LIMIT <= 0:
+        return {
+            "mode": "COMMUNITY_LOCAL_UNLIMITED",
+            "limited": False,
+            "daily_limit": None,
+            "downloads_used_today": 0,
+            "downloads_remaining_today": None,
+            "can_download": True,
+            "request_allowed": True,
+            "message": "Community local includes unlimited audit-trail CSV downloads.",
+        }
+    today = datetime.now(timezone.utc).date().isoformat()
+    with EXPORT_USAGE_LOCK:
+        usage: dict[str, Any] = {"date_utc": today, "downloads": 0}
+        if EXPORT_USAGE_FILE.exists():
+            try:
+                stored = json.loads(EXPORT_USAGE_FILE.read_text(encoding="utf-8"))
+                if stored.get("date_utc") == today:
+                    usage = stored
+            except (OSError, ValueError, TypeError):
+                pass
+        used = max(0, int(usage.get("downloads") or 0))
+        request_allowed = used < HOSTED_DEMO_DAILY_CSV_LIMIT
+        if consume and request_allowed:
+            used += 1
+            EXPORT_USAGE_FILE.parent.mkdir(parents=True, exist_ok=True)
+            EXPORT_USAGE_FILE.write_text(
+                json.dumps({"date_utc": today, "downloads": used}, indent=2),
+                encoding="utf-8",
+            )
+        remaining = max(0, HOSTED_DEMO_DAILY_CSV_LIMIT - used)
+    return {
+        "mode": "HOSTED_DEMO_LIMITED",
+        "limited": True,
+        "daily_limit": HOSTED_DEMO_DAILY_CSV_LIMIT,
+        "downloads_used_today": used,
+        "downloads_remaining_today": remaining,
+        "can_download": remaining > 0,
+        "request_allowed": request_allowed,
+        "resets_on_utc_date": today,
+        "message": f"Free hosted demo: {remaining} CSV downloads remaining today.",
+    }
+
+
+def evidence_download_url(path: Path) -> str:
+    return "/api/download_evidence?file=" + quote(path.name)
 
 
 
@@ -209,8 +266,39 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
                 "report_dir": rel(REPORT_DIR),
                 "data_cache_exists": (PROJECT_ROOT / "data" / "market_cache").exists(),
                 "safety": "Audit-only by design. No broker execution.",
+                "export_policy": export_policy(),
             }
             json_response(self, payload)
+            return
+        if parsed.path == "/api/export_policy":
+            json_response(self, {"ok": True, "export_policy": export_policy()})
+            return
+        if parsed.path == "/api/download_evidence":
+            requested_name = Path((parse_qs(parsed.query).get("file") or [""])[0]).name
+            requested_path = REPORT_DIR / requested_name
+            if not requested_name or requested_path.suffix.lower() != ".csv" or not requested_path.exists():
+                json_response(self, {"ok": False, "error": "evidence_csv_not_found"}, status=404)
+                return
+            policy = export_policy(consume=True)
+            if not policy["request_allowed"]:
+                json_response(self, {
+                    "ok": False,
+                    "error": "hosted_demo_daily_csv_limit_reached",
+                    "export_policy": policy,
+                    "message": "Today's free CSV downloads are used. Local Community remains unlimited; hosted Pro is planned for unlimited exports.",
+                }, status=429)
+                return
+            body = requested_path.read_bytes()
+            self.send_response(200)
+            self.send_header("Content-Type", "text/csv; charset=utf-8")
+            self.send_header("Content-Disposition", f'attachment; filename="{requested_path.name}"')
+            self.send_header("Content-Length", str(len(body)))
+            self.send_header("Cache-Control", "no-store")
+            self.end_headers()
+            self.wfile.write(body)
+            return
+        if parsed.path.startswith("/reports/local_workbench/") and parsed.path.lower().endswith(".csv"):
+            json_response(self, {"ok": False, "error": "use_evidence_download_endpoint"}, status=404)
             return
         if parsed.path == "/api/indicator_catalog":
             catalog = block_catalog()
@@ -356,10 +444,11 @@ class WorkbenchHandler(SimpleHTTPRequestHandler):
                         {
                             **{key: value for key, value in export.items() if key != "path"},
                             "path": rel(export["path"]),
-                            "url": "/" + rel(export["path"]),
+                            "url": evidence_download_url(export["path"]),
                         }
                         for export in evidence_csvs
                     ],
+                    "export_policy": export_policy(),
                     "report": browser_report_payload,
                     "thresholds": rows_payload,
                 })

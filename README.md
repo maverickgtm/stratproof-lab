@@ -37,7 +37,7 @@ StratProof Lab should feel different from a normal backtester. The product story
 
 ## Evidence Command Center
 
-Community now opens into a premium-grade **Evidence Command Center**: choose traceable inputs, build a formula with visual blocks, run strict vs relaxed audits, and download the operation-level evidence behind the verdict. The premium interface is included in the free Community release; paid plans remain about scale, collaboration and advanced workflows rather than hiding basic verification.
+Community now opens into a premium-grade **Evidence Command Center**: select traceable inputs, adjust a visual formula and use **Quick Audit** to generate the result and its first CSV verification download without handling JSON manually. The premium interface is included in the free local Community release; a future hosted free demo can disclose a daily CSV allowance while paid plans focus on unlimited hosted exports, scale, collaboration and advanced workflows.
 
 <p align="center">
   <img src="assets/github/screenshots/05_local_workbench_real.png" alt="StratProof Lab Local Workbench real preview" width="100%">
@@ -366,21 +366,16 @@ python scripts/launch_local_workbench.py
 
 Then open the local URL shown in the terminal.
 
-Recommended workbench order:
+Fastest workbench path:
 
 ```text
-1. Choose provider and symbols.
-2. Choose timeframe, BTC context timeframe, days, and candle limit.
-3. Click Generate offline demo cache for a quick synthetic-data workflow test.
-4. Or click Download public history for real public exchange candles.
-5. Build a formula with the visual blocks.
-6. Click Build JSON.
-7. Click Run strict audit.
-8. Click Run relaxed audit or Run strict + relaxed.
-9. Review Evidence Guidance and Strict vs Relaxed Evidence Ladder.
-10. Open the visual evidence report, Markdown report, JSON report, or threshold comparison.
-11. Save ideas worth testing again.
+1. Click Try demo + audit for an instant labeled synthetic walkthrough.
+2. Or load public history, adjust visual blocks and click Audit current formula + prepare CSV.
+3. Download the operations CSV directly from the result panel.
+4. Use strict vs relaxed only when diagnosing sample starvation.
 ```
+
+Local Community includes CSV downloads without a daily quota. A hosted read-only demo may enable a transparent free allowance with `STRATPROOF_HOSTED_DEMO_DAILY_CSV_LIMIT=3`; no payment or checkout system is included in this repository.
 
 Important terminology:
 

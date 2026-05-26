@@ -49,7 +49,21 @@ Open the workbench:
 python3 scripts/launch_local_workbench.py
 ```
 
-Then follow this order:
+### Fast path for a first-time user
+
+1. Click **Try demo + audit**.
+   - This creates clearly labeled synthetic data, builds the default visual formula and runs a strict audit in one action.
+   - It is a workflow demonstration, not real market evidence.
+
+2. Review the result and click **Download operations CSV**.
+   - This is the shortest path from an idea to inspectable replay detections.
+
+3. When ready for real evidence, choose a live provider, click **Download public history**, adjust the formula and click **Audit current formula + prepare CSV**.
+   - JSON is built automatically from the visual controls.
+
+### Detailed research path
+
+Follow this order when deliberately modifying every input:
 
 1. Choose provider.
    - Use `bybit`, `binance`, `okx`, `coinbase`, or `kraken` for public downloads.
@@ -76,9 +90,10 @@ Then follow this order:
    - Add indicator blocks: RSI, BTC EMA, Relative Volume, EMA.
    - Configure operator, value/period, and timeframe/lookback.
 
-7. Click **Build JSON**.
+7. Optionally click **Build JSON**.
    - This creates the portable formula JSON from visual controls.
    - The JSON can be inspected or copied.
+   - Quick Audit builds it automatically, so most users can skip this step.
 
 8. Click **Run strict audit**.
    - This runs the exact formula as configured.
@@ -117,6 +132,18 @@ The top status rail makes the evidence workflow explicit:
 - Audit engine shows whether the strict or discovery audit is running and how many outcomes closed.
 - Verification pack reports when the maximum-three CSV audit trail is ready.
 
+### CSV access and hosted demo boundary
+
+The local open-source Community workbench keeps audit-trail CSV downloads available without a daily quota. This is important because verification should remain useful to GitHub users.
+
+For a separately hosted public demo, the server can disclose and enforce a free daily CSV allowance:
+
+```bash
+STRATPROOF_HOSTED_DEMO_DAILY_CSV_LIMIT=3 python3 scripts/launch_local_workbench.py
+```
+
+In that mode the dashboard displays how many free CSV downloads remain for the UTC day and offers a Pro preview when the allowance is exhausted. This repository does not include checkout, accounts or paid entitlement activation.
+
 ### Area 1 — Data Setup
 
 This area chooses data source, symbols, timeframe, history window, and download/cache method.
@@ -150,6 +177,7 @@ This area shows the latest audit results.
 - Strict vs relaxed ladder: compares original formula vs discovery probe.
 - Latest reports: opens visual/Markdown/JSON/threshold outputs.
 - Audit Trail Downloads: exports no more than three CSV files for operation-level and candle-level verification.
+- Quick Audit: automatically builds the current visual formula, runs the strict audit and exposes the primary operations CSV download.
 - Symbol results: shows per-symbol outcome summaries.
 
 ## How to explain strict vs relaxed

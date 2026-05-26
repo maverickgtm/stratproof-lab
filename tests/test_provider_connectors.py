@@ -12,6 +12,7 @@ from app.provider_connectors.factory import get_connector
 from app.provider_connectors.local_store import cache_path, merge_ohlcv_csv
 from app.idea_lab.backtest_runner import run_idea_backtest
 from app.idea_lab.evidence_export import export_audit_evidence_csvs, TRADINGVIEW_HEADERS
+from scripts import launch_local_workbench as workbench
 
 
 class FakeResponse:
@@ -220,6 +221,31 @@ class LocalStoreTests(unittest.TestCase):
                 use_cache=False,
             )
             self.assertEqual(report.overall["signals_total"], 0)
+
+    def test_hosted_demo_csv_quota_allows_three_downloads_before_upgrade_prompt(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            usage_file = Path(directory) / "csv_usage.json"
+            with patch.object(workbench, "HOSTED_DEMO_DAILY_CSV_LIMIT", 3), patch.object(
+                workbench, "EXPORT_USAGE_FILE", usage_file
+            ):
+                initial = workbench.export_policy()
+                first = workbench.export_policy(consume=True)
+                second = workbench.export_policy(consume=True)
+                third = workbench.export_policy(consume=True)
+                fourth = workbench.export_policy(consume=True)
+            self.assertEqual(initial["downloads_remaining_today"], 3)
+            self.assertTrue(first["request_allowed"])
+            self.assertTrue(second["request_allowed"])
+            self.assertTrue(third["request_allowed"])
+            self.assertEqual(third["downloads_remaining_today"], 0)
+            self.assertFalse(fourth["request_allowed"])
+
+    def test_local_community_csv_download_policy_remains_unlimited(self) -> None:
+        with patch.object(workbench, "HOSTED_DEMO_DAILY_CSV_LIMIT", 0):
+            policy = workbench.export_policy(consume=True)
+        self.assertEqual(policy["mode"], "COMMUNITY_LOCAL_UNLIMITED")
+        self.assertTrue(policy["can_download"])
+        self.assertIsNone(policy["daily_limit"])
 
 
 if __name__ == "__main__":

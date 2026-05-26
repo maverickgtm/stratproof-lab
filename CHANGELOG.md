@@ -12,6 +12,7 @@ All notable public changes to StratProof Lab will be documented here.
 - Live provider selection in the local Workbench for all five implemented Community connectors.
 - A three-file audit trail export pack: detected operations, supporting candle paths, and eligible TradingView Portfolio replay rows.
 - A redesigned Evidence Command Center interface that surfaces provenance, audit state and verification exports as the primary user workflow.
+- A one-click Quick Audit path with immediate operations-CSV verification and an optional hosted-demo daily export allowance.
 
 ### Fixed
 
