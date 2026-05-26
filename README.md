@@ -28,6 +28,8 @@ The v2 integrity rules are intentionally strict:
 
 Every formula audit can now download an **Audit Trail Pack** of no more than three CSV files: a full detected-operations ledger, its supporting candle paths, and a TradingView Portfolio-compatible replay file for eligible closed `LONG` spot results. This makes the numbers inspectable while stating plainly that detections are replays, not executed trades, and labeling synthetic offline-demo inputs separately from stored market data.
 
+For eligible replays, the Evidence Command Center now includes an in-product **TradingView visual cross-check** guide: download the compatible replay CSV, import it into TradingView Portfolio transactions, and compare displayed entries/exits with StratProof's condition ledger and candle-path evidence. TradingView provides visualization, not independent formula validation or proof of executed trades.
+
 See [Public connector evidence policy](docs/V2_PUBLIC_CONNECTORS.md), [Audit Trail CSV exports](docs/V2_AUDIT_EVIDENCE_EXPORTS.md), and the [v2 audit report](docs/V2_AUDIT_REPORT.md) for details.
 
 ## See the audit workflow

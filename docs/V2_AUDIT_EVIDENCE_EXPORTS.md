@@ -21,7 +21,34 @@ Use this export to visualize reconstructed entries and exits against a TradingVi
 Official TradingView documentation:
 
 - [How to add transactions via file import](https://www.tradingview.com/support/solutions/43000756014-how-to-add-transactions-via-file-import/)
-- [CSV file formatting for Portfolio import](https://www.tradingview.com/support/solutions/43000756010/)
+- [CSV file formatting for Portfolio import](https://www.tradingview.com/support/solutions/43000756010-how-to-create-a-portfolio-via-transaction-import/)
+
+## How to Use the TradingView Visual Cross-Check
+
+1. Run a StratProof strict audit using `spot` market data and a `LONG` hypothesis.
+2. In **Audit Trail Downloads**, download:
+   - **Detected operations ledger (CSV)** for the condition trace and replay outcome.
+   - **Source candle path evidence (CSV)** for the supporting OHLCV path.
+   - **TradingView Portfolio replay import (CSV)** when the dashboard reports rows greater than zero.
+3. Open TradingView and create or open a Portfolio.
+4. Open the Portfolio **Transactions** tab, choose its import action, and upload the TradingView replay CSV.
+5. When TradingView asks how to handle transactions, use merge behavior unless you intentionally want to replace transactions already in that Portfolio.
+6. Inspect the imported entry and exit events on TradingView-supported symbols, then compare questionable events to the matching `operation_id` and candle path in the first two StratProof exports.
+
+TradingView currently documents a `25 MB` maximum import file size and adds transactions only for supported instruments. If an import reports a format or symbol error, use the operations ledger and candle-path exports as the source audit artifacts while investigating compatibility.
+
+### What This Confirms
+
+- The reconstructed entry and exit times/prices can be inspected visually in an independent charting interface.
+- The symbol is resolvable by TradingView when the import succeeds.
+- A user can challenge suspicious replays rather than trusting summary statistics alone.
+
+### What This Does Not Confirm
+
+- TradingView does not rerun StratProof indicator blocks or score thresholds.
+- TradingView does not validate the `condition_trace` field.
+- Imported replay transactions are not brokerage fills or proof of trades executed in a real account.
+- Synthetic demo inputs remain synthetic even if TradingView displays their imported rows.
 
 ## Audit Procedure
 
@@ -29,7 +56,7 @@ Official TradingView documentation:
 2. Build and run a strict formula audit.
 3. Download the operations ledger and verify each condition trace.
 4. Open the candle-path export and inspect the linked OHLCV path for selected operation IDs.
-5. For eligible `LONG` spot replay rows, import the TradingView CSV into Portfolio to visually compare reconstructed timestamps and prices with the chart.
+5. For eligible `LONG` spot replay rows, import the TradingView CSV into Portfolio to visually compare reconstructed timestamps and prices with the chart; return to the operations ledger and candle path for formula-level audit evidence.
 
 ## Evidence Boundary
 

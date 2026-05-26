@@ -31,6 +31,7 @@
     .evidenceColumns{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:14px}.subPanel{background:rgba(7,16,30,.45);border:1px solid rgba(37,65,95,.65);border-radius:17px;padding:14px}.subPanel h3{margin-top:0}
     .fastTrack{margin:4px 0 18px;padding:16px;border:1px solid rgba(64,224,183,.27);border-radius:18px;background:linear-gradient(130deg,rgba(64,224,183,.08),rgba(78,162,255,.045))}.fastTrackHeader{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:9px}.fastTrackHeader h3{margin:0;color:var(--electric)}.fastSteps{display:flex;gap:7px;flex-wrap:wrap;margin:12px 0}.fastSteps span{border:1px solid rgba(64,224,183,.22);background:rgba(4,15,27,.45);color:var(--muted);font-size:11px;padding:6px 9px;border-radius:999px}.quickButtons{display:flex;flex-wrap:wrap;gap:8px}.quickButtons button{margin:0}.quickButtons .quickPrimary{background:linear-gradient(135deg,var(--electric),#72f1d5)}
     .exportAction{margin:12px 0;padding:13px;border-radius:15px;background:rgba(6,17,31,.56);border:1px solid rgba(78,162,255,.28)}.exportAction[hidden]{display:none}.primaryDownload{display:inline-flex!important;align-items:center;padding:11px 15px!important;border-radius:11px;background:linear-gradient(135deg,var(--electric),#74f2d6);color:#061520!important;font-weight:900;text-decoration:none;margin:5px 8px 7px 0!important}.quotaStatus{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;padding:7px 10px;font-size:11px;font-weight:700;color:var(--muted);margin:5px 0}.quotaStatus.limited{border-color:rgba(255,217,106,.45);color:var(--yellow);background:rgba(255,217,106,.08)}.quotaUpsell{margin-top:7px}.quotaUpsell button{padding:8px 10px;margin:5px 0;background:#172943;color:#ffe5a3;border:1px solid rgba(255,217,106,.38)}
+    .tradingViewCheck{margin:14px 0 4px;padding:15px;border-radius:16px;border:1px solid rgba(78,162,255,.32);background:linear-gradient(145deg,rgba(78,162,255,.08),rgba(64,224,183,.045))}.tradingViewCheck[hidden]{display:none}.tradingViewCheck h4{margin:0 0 7px;font-size:15px}.tvActions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.tvActions a{display:inline-flex!important;align-items:center;padding:10px 13px!important;margin:0!important;border-radius:11px;font-weight:800;text-decoration:none}.tvDownload{background:rgba(78,162,255,.2);border:1px solid rgba(78,162,255,.4);color:#bfe2ff!important}.tvHelp{background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--muted)!important}.tvSteps{margin:7px 0 4px;padding-left:19px;color:var(--muted);font-size:12px;line-height:1.55}.tvBoundary{margin-top:9px;padding:9px 10px;border-radius:11px;background:rgba(255,217,106,.07);color:var(--yellow);font-size:12px;line-height:1.5}
     .proGrid{grid-template-columns:repeat(3,minmax(0,1fr))}.proRail{margin-top:18px}
     @media(max-width:1260px){.commandHero{grid-template-columns:1fr}.dataPanel{position:relative;top:auto;grid-row:auto}.grid{grid-template-columns:1fr}.builderPanel,.evidencePanel{grid-column:auto}.metricGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.proGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
     @media(max-width:720px){.topnav{display:none}.commandHero{padding-top:25px}.commandHero h2{font-size:35px}.commandStatus,.verificationLane,.evidenceColumns,.proGrid,.metricGrid{grid-template-columns:1fr!important}.sectionTop{display:block}.stateBadge{display:inline-block;margin-top:8px}}
@@ -130,6 +131,13 @@
     <div class="auditPack" id="exports">
       <h3>Audit Trail Downloads</h3>
       <div id="instantCsvAction" class="exportAction" hidden><div class="small">Start verification with the complete detected-operations ledger.</div><a id="primaryCsvDownload" class="primaryDownload" href="#" download onclick="scheduleQuotaRefresh()">Download operations CSV</a><div id="downloadQuotaStatus" class="quotaStatus">Checking export access...</div><div id="downloadUpsell" class="quotaUpsell"></div></div>
+      <div id="tradingViewCheck" class="tradingViewCheck" hidden>
+        <h4>Visual cross-check in TradingView Portfolio</h4>
+        <div class="small">Import eligible closed LONG spot replay entries and exits into a TradingView Portfolio to inspect them against supported market symbols.</div>
+        <div class="tvActions"><a id="tradingViewCsvDownload" class="tvDownload" href="#" download onclick="scheduleQuotaRefresh()">Download TradingView replay CSV</a><a class="tvHelp" href="https://www.tradingview.com/support/solutions/43000756014-how-to-add-transactions-via-file-import/" target="_blank" rel="noopener noreferrer">Official import instructions</a></div>
+        <ol class="tvSteps"><li>Open a TradingView Portfolio and its <b>Transactions</b> tab.</li><li>Choose <b>Import</b> and upload this replay CSV.</li><li>Keep merge mode unless you intentionally want to replace existing portfolio transactions.</li><li>Compare imported buy/sell events with the StratProof operations ledger and candle path.</li></ol>
+        <div class="tvBoundary"><b>Boundary:</b> TradingView visualizes reconstructed transactions. It does not rerun the formula, validate condition traces or prove real account execution.</div>
+      </div>
       <div id="evidenceCsvLinks" class="links small"><span class="muted">Run an audit to download up to three CSV evidence files.</span></div>
     </div>
     <div class="evidenceColumns">
@@ -425,12 +433,22 @@ function renderAuditResult(data, label){
   links.innerHTML=`${data.report_html_url?`<a class="reportHeroLink" href="${safeUrl(data.report_html_url)}" target="_blank">Open visual evidence report</a>`:''}<a href="${safeUrl(data.report_md_url)}" target="_blank">Open Markdown report</a><a href="${safeUrl(data.report_json_url)}" target="_blank">Open JSON report</a><a href="${safeUrl(data.threshold_md_url)}" target="_blank">Open threshold comparison</a>`;
   const instantCsvAction=document.getElementById('instantCsvAction');
   const primaryCsvDownload=document.getElementById('primaryCsvDownload');
+  const tradingViewExport=exports.find(item=>item.kind==='tradingview_portfolio_replay' && Number(item.rows||0)>0);
+  const tradingViewCheck=document.getElementById('tradingViewCheck');
+  const tradingViewCsvDownload=document.getElementById('tradingViewCsvDownload');
   if(exports.length){
     instantCsvAction.hidden=false;
     primaryCsvDownload.href=safeUrl(exports[0].url);
     primaryCsvDownload.textContent=`Download operations CSV · ${exports[0].rows} rows`;
   } else {
     instantCsvAction.hidden=true;
+  }
+  if(tradingViewExport){
+    tradingViewCheck.hidden=false;
+    tradingViewCsvDownload.href=safeUrl(tradingViewExport.url);
+    tradingViewCsvDownload.textContent=`Download TradingView replay CSV · ${tradingViewExport.rows} rows`;
+  } else {
+    tradingViewCheck.hidden=true;
   }
   evidenceCsvLinks.innerHTML=`<div class="small warn">${escapeHtml(data.evidence_notice || 'Historical replay evidence only; not executed trades.')}</div>${exports.map(item=>`<a href="${safeUrl(item.url)}" download onclick="scheduleQuotaRefresh()">${escapeHtml(item.label)} · ${escapeHtml(item.rows)} rows</a><div class="small muted">${escapeHtml(item.description)}</div>`).join('') || '<span class="muted">No CSV exports generated.</span>'}<div class="pill">Maximum: 3 CSV artifacts per audit</div>`;
   symbolResults.innerHTML=(data.report.symbol_results||[]).map(r=>`<div class="pill">${escapeHtml(r.symbol)} ${escapeHtml(r.side)}: ${escapeHtml(r.known)} known · WR ${escapeHtml(r.winrate_pct)}% · Net ${escapeHtml(r.net_r_simple)} · ${escapeHtml(r.verdict)}</div>`).join('') || '<span class="muted">No symbol results available yet.</span>';

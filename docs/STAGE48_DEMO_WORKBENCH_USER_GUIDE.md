@@ -57,6 +57,7 @@ python3 scripts/launch_local_workbench.py
 
 2. Review the result and click **Download operations CSV**.
    - This is the shortest path from an idea to inspectable replay detections.
+   - If **Download TradingView replay CSV** appears, it can be imported into TradingView Portfolio for a visual cross-check of eligible replay entries and exits.
 
 3. When ready for real evidence, choose a live provider, click **Download public history**, adjust the formula and click **Audit current formula + prepare CSV**.
    - JSON is built automatically from the visual controls.
@@ -118,6 +119,23 @@ Follow this order when deliberately modifying every input:
     - Download the linked source candle-path CSV.
     - For eligible closed `LONG` spot replays, download the TradingView Portfolio replay CSV for chart visualization.
     - These exports document historical replay detections, not executed account trades.
+
+### Checking a Replay in TradingView
+
+TradingView Portfolio supports transaction import from a CSV file. When StratProof offers a non-empty **TradingView replay CSV**:
+
+1. Download it from the Audit Trail panel.
+2. Open a TradingView Portfolio and go to its **Transactions** tab.
+3. Use the import action and upload the CSV.
+4. Prefer merging transactions unless replacing an existing portfolio is intentional.
+5. Compare displayed buy/sell events to StratProof's operations ledger and source candle-path CSV.
+
+TradingView is a visual cross-check, not a formula auditor. It does not recalculate indicators, score thresholds or condition traces, and an imported replay is not proof of a real executed trade. TradingView documents a 25 MB upload maximum and imports only supported instruments.
+
+Official instructions:
+
+- [TradingView transaction file import](https://www.tradingview.com/support/solutions/43000756014-how-to-add-transactions-via-file-import/)
+- [TradingView Portfolio CSV formatting](https://www.tradingview.com/support/solutions/43000756010-how-to-create-a-portfolio-via-transaction-import/)
 
 13. Save useful ideas.
     - Use **Save Idea** after building a formula worth revisiting.
