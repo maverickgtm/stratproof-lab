@@ -550,13 +550,18 @@ def build_sample_sufficiency_guidance(report: IdeaAuditReport, idea: dict[str, A
     if len(report.symbols) <= 2:
         recommendations.append("Add more symbols or extend history to 60–90 days for a broader evidence check.")
     recommendations.append("Use relaxed audit only for discovery; final promotion should rerun the original strict formula.")
+    default_reason = (
+        "Evidence meets the initial review threshold; robustness tests are still required before relying on the hypothesis."
+        if known >= 30
+        else "Evidence sample is below the preferred review threshold."
+    )
     return {
         "known": known,
         "signals_total": signals_total,
         "no_touch": no_touch,
         "minimum_preferred_known": 30,
         "sample_status": "INSUFFICIENT_SAMPLE" if known < 30 else "ENOUGH_FOR_INITIAL_REVIEW",
-        "reasons": reasons or ["Evidence sample is below the preferred review threshold."],
+        "reasons": reasons or [default_reason],
         "recommended_next_tests": recommendations,
     }
 

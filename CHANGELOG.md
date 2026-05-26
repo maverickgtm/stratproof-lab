@@ -11,6 +11,7 @@ All notable public changes to StratProof Lab will be documented here.
 - An evidence-integrity cache merge policy that prevents repeated downloads from duplicating candle timestamps.
 - Live provider selection in the local Workbench for all five implemented Community connectors.
 - A three-file audit trail export pack: detected operations, supporting candle paths, and eligible TradingView Portfolio replay rows.
+- A redesigned Evidence Command Center interface that surfaces provenance, audit state and verification exports as the primary user workflow.
 
 ### Fixed
 
@@ -18,6 +19,7 @@ All notable public changes to StratProof Lab will be documented here.
 - OKX unconfirmed candles are excluded from audit inputs.
 - Community provider claims now match implemented downloaders.
 - Dynamic Workbench report and saved-idea fields are escaped before HTML rendering.
+- Evidence guidance no longer describes samples above the initial-review threshold as undersized.
 - Comprehensive-product checks validate current README language and new connector tests run in CI.
 - The project notice is separated from canonical AGPL text so repository hosts can identify the license cleanly.
 

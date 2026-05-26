@@ -35,9 +35,9 @@ See [Public connector evidence policy](docs/V2_PUBLIC_CONNECTORS.md), [Audit Tra
 StratProof Lab should feel different from a normal backtester. The product story is simple: build an idea, audit the evidence, inspect the quality gates, and understand how the research system reached its verdict.
 
 
-## Real Community Workbench preview
+## Evidence Command Center
 
-This is the actual local Workbench flow: choose provider, configure symbols and timeframes, build a formula with visual blocks, run strict vs relaxed audits, and review the evidence guidance panel.
+Community now opens into a premium-grade **Evidence Command Center**: choose traceable inputs, build a formula with visual blocks, run strict vs relaxed audits, and download the operation-level evidence behind the verdict. The premium interface is included in the free Community release; paid plans remain about scale, collaboration and advanced workflows rather than hiding basic verification.
 
 <p align="center">
   <img src="assets/github/screenshots/05_local_workbench_real.png" alt="StratProof Lab Local Workbench real preview" width="100%">
@@ -281,7 +281,7 @@ Paid editions are planned, but **no payment system, license server, customer dat
 
 | Feature | Community | Pro | Pro Plus | Team / Enterprise |
 |---|---:|---:|---:|---:|
-| Local Workbench | ✅ | ✅ | ✅ | ✅ |
+| Evidence Command Center / Local Workbench | ✅ | ✅ | ✅ | ✅ |
 | Formula Builder | ✅ Basic | ✅ Advanced | ✅ Advanced | ✅ Advanced |
 | Bybit/Binance/OKX/Coinbase/Kraken public history | ✅ Basic | ✅ Larger limits | ✅ Larger limits | ✅ Custom limits |
 | Offline synthetic demo cache | ✅ | ✅ | ✅ | ✅ |

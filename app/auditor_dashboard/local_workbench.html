@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>StratProof Lab — Local Workbench</title>
+  <title>StratProof Lab — Evidence Command Center</title>
   <style>
     :root{--bg:#07101f;--panel:#101c30;--panel2:#13243b;--line:#25415f;--text:#e7edf6;--muted:#aeb9c8;--cyan:#6ed7ff;--green:#7ef0a0;--yellow:#ffd96a;--red:#ff7b7b;--purple:#b899ff;}
     *{box-sizing:border-box} body{margin:0;background:radial-gradient(circle at 30% 0,#12243d 0,#07101f 44%,#040914 100%);font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;color:var(--text)}
@@ -14,16 +14,49 @@
     button{border:0;border-radius:12px;padding:11px 14px;font-weight:800;cursor:pointer;color:#03101a;background:linear-gradient(135deg,var(--cyan),var(--purple));margin:6px 6px 6px 0}button.secondary{background:#162841;color:var(--text);border:1px solid var(--line)}button.green{background:linear-gradient(135deg,var(--green),#b8ffd0)}button.yellow{background:linear-gradient(135deg,var(--yellow),#fff0a8)}button:disabled{opacity:.5;cursor:not-allowed}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.small{font-size:12px;color:var(--muted);line-height:1.45}.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}.card{min-width:0;overflow:hidden;background:rgba(10,22,40,.9);border:1px solid var(--line);border-radius:16px;padding:16px;border-top:4px solid var(--cyan)}.metric{font-size:clamp(22px,3vw,32px);font-weight:900;line-height:1.08;overflow-wrap:anywhere;word-break:break-word}.metric.verdictMetric{font-size:clamp(20px,2.5vw,28px)}.metric.green{color:var(--green)}.metric.yellow{color:var(--yellow)}.metric.red{color:var(--red)}.pill{display:inline-block;max-width:100%;padding:6px 10px;border-radius:999px;background:#0b1a30;border:1px solid var(--line);color:var(--muted);font-size:12px;margin:4px 4px 0 0;overflow-wrap:anywhere;word-break:break-word;white-space:normal}.log{white-space:pre-wrap;background:#060d19;border:1px solid var(--line);border-radius:12px;padding:12px;color:#cbd5e1;max-height:260px;overflow:auto;font-size:12px}.links a{color:var(--cyan);display:block;margin:6px 0;text-decoration:none}.block-row{display:grid;grid-template-columns:minmax(120px,1fr) minmax(135px,1fr) minmax(92px,.65fr) minmax(90px,.55fr) 44px;gap:8px;align-items:end;margin:10px 0;padding:10px;border:1px solid rgba(37,65,95,.45);border-radius:14px;background:rgba(8,20,38,.35);overflow:hidden}.block-field{min-width:0}.block-field label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.block-row input,.block-row select{font-size:14px;padding:10px 10px}.block-row button{margin:0;padding:10px 10px;min-width:0}.removeBlockBtn{width:40px;height:40px;padding:0!important;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;line-height:1;background:#162841!important;color:#e5edf7!important;border:1px solid var(--line)!important}.removeBlockBtn:hover{border-color:var(--red)!important;color:#ffd0d6!important;background:rgba(255,113,126,.16)!important}.providerNote{margin-top:8px;color:var(--muted);font-size:12px;line-height:1.4}.symbolPicker{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:8px 0 10px}.symbolChip{display:flex;align-items:center;gap:8px;padding:8px 10px;border:1px solid var(--line);border-radius:12px;background:#0b1a30;color:var(--text);font-size:12px}.symbolChip input{width:auto;margin:0}.reportHeroLink{display:block;border:1px solid rgba(110,215,255,.55);background:linear-gradient(135deg,rgba(110,215,255,.16),rgba(184,153,255,.1));border-radius:14px;padding:10px 12px;margin:6px 0 10px;color:var(--text)!important;font-weight:900}.softDivider{height:1px;background:var(--line);opacity:.7;margin:14px 0}.muted{color:var(--muted)}.ok{color:var(--green)}.warn{color:var(--yellow)}.bad{color:var(--red)}.proBox{display:none;margin-top:8px;border:1px solid rgba(255,217,106,.5);background:rgba(255,217,106,.08);color:#ffe5a3;border-radius:14px;padding:10px 12px;font-size:12px;line-height:1.45}.proBox.show{display:block}.proBadge{display:inline-block;border:1px solid rgba(255,217,106,.45);border-radius:999px;padding:2px 7px;margin-left:6px;color:#ffe5a3;background:rgba(255,217,106,.08);font-size:11px;font-weight:800}.proGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:10px}.proFeature{border:1px solid rgba(255,217,106,.38);background:rgba(255,217,106,.07);border-radius:14px;padding:10px;min-width:0}.proFeature button{width:100%;margin:8px 0 0;padding:9px 10px;background:#1b2b43!important;color:#ffe5a3!important;border:1px solid rgba(255,217,106,.38)!important}.proFeature b{display:block;color:#ffe5a3;margin-bottom:4px}.proLock{font-size:11px;color:var(--muted);line-height:1.35}.proModal{position:fixed;inset:0;background:rgba(2,6,14,.72);display:none;align-items:center;justify-content:center;z-index:50;padding:24px}.proModal.show{display:flex}.proModalCard{max-width:620px;background:#0f1d31;border:1px solid rgba(255,217,106,.45);border-radius:22px;padding:22px;box-shadow:0 30px 70px rgba(0,0,0,.45)}
     @media(max-width:1200px){.grid{grid-template-columns:1fr}.cards{grid-template-columns:1fr}.block-row{grid-template-columns:1fr 1fr 1fr 44px}.row{grid-template-columns:1fr}}@media(max-width:720px){.block-row{grid-template-columns:1fr 1fr}.removeBlockBtn{width:100%;height:42px}}
   </style>
+  <style>
+    :root{--electric:#40e0b7;--electric2:#4ea2ff;--surface:#0a1425;--surface2:#111d31}
+    body{background:radial-gradient(circle at 52% -10%,rgba(64,224,183,.14),transparent 34%),radial-gradient(circle at 90% 12%,rgba(78,162,255,.15),transparent 31%),#050b15}
+    .topbar{padding:18px clamp(18px,3.5vw,42px);background:rgba(5,11,21,.8);border-color:rgba(88,123,160,.27)}
+    .brandWrap{display:flex;align-items:center;gap:14px}.brandMark{width:45px;height:45px;border-radius:14px;display:grid;place-items:center;color:#04131a;font-size:17px;font-weight:950;background:linear-gradient(135deg,var(--electric),var(--electric2));box-shadow:0 0 25px rgba(64,224,183,.3)}
+    .brandWrap h1{font-size:20px;letter-spacing:-.02em}.brandWrap .small{letter-spacing:.11em;text-transform:uppercase;font-size:10px}
+    .topnav{display:flex;align-items:center;gap:4px;flex-wrap:wrap}.topnav a{color:var(--muted);padding:9px 11px;border-radius:10px;text-decoration:none;font-size:13px}.topnav a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+    .commandHero{max-width:1600px;margin:0 auto;padding:32px clamp(18px,3.5vw,42px) 20px;display:grid;grid-template-columns:minmax(340px,1fr) minmax(420px,690px);gap:26px;align-items:end}
+    .eyebrow{color:var(--electric);font-size:11px;text-transform:uppercase;letter-spacing:.18em;font-weight:800;margin-bottom:12px}.commandHero h2{font-size:clamp(34px,4.1vw,57px);line-height:1.03;letter-spacing:-.06em;margin:0 0 14px;max-width:720px}.commandHero p{font-size:15px;line-height:1.6;color:var(--muted);max-width:690px;margin:0 0 22px}.heroActions{display:flex;gap:10px;flex-wrap:wrap}.heroActions a,.heroActions button{display:inline-flex;align-items:center;text-decoration:none;margin:0;padding:13px 18px;border-radius:13px;font-weight:800}.heroActions a{background:linear-gradient(135deg,var(--electric),#71f3d5);color:#03141a}.heroActions .secondaryCta{background:transparent;color:var(--text);border:1px solid var(--line)}
+    .commandStatus{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}.commandStatus article{min-height:142px;background:linear-gradient(155deg,rgba(17,29,49,.92),rgba(8,17,31,.92));border:1px solid var(--line);border-radius:18px;padding:16px}.commandStatus span{display:block;text-transform:uppercase;font-size:10px;letter-spacing:.15em;color:var(--muted);margin-bottom:16px}.commandStatus strong{display:block;font-size:17px;line-height:1.25;margin-bottom:9px}.commandStatus small{font-size:12px;line-height:1.45;color:var(--muted)}.commandStatus .live strong{color:var(--electric)}.commandStatus .ready strong{color:var(--cyan)}.commandStatus .pending strong{color:var(--yellow)}
+    .grid{grid-template-columns:minmax(315px,365px) minmax(0,1fr);max-width:1600px;margin:0 auto;padding:16px clamp(18px,3.5vw,42px) 40px;gap:16px;align-items:start}.panel{border-radius:21px;background:linear-gradient(160deg,rgba(16,28,48,.94),rgba(8,17,31,.94));border-color:rgba(54,83,114,.7)}
+    .dataPanel{grid-row:1 / span 2;position:sticky;top:88px}.builderPanel{grid-column:2}.evidencePanel{grid-column:2;padding:22px}.sectionTop{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:14px}.sectionTop h2{font-size:24px;letter-spacing:-.035em;margin:0 0 5px}.sectionTop .small{max-width:540px}.stateBadge{font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:9px 12px;border-radius:999px;border:1px solid rgba(255,217,106,.36);color:var(--yellow);white-space:nowrap}.stateBadge.ready{color:var(--electric);border-color:rgba(64,224,183,.4);background:rgba(64,224,183,.08)}
+    .metricGrid{grid-template-columns:repeat(4,minmax(0,1fr))!important;margin-top:14px}.metricGrid .card{min-height:112px;padding:14px;border-top-width:2px}.metricGrid .metric{font-size:clamp(18px,2vw,26px);margin-top:7px}.metricGrid .card:last-child{border-top-color:var(--electric)}
+    .verificationLane{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:17px 0 8px}.laneCard{background:rgba(8,20,38,.65);border:1px solid var(--line);border-radius:15px;padding:13px}.laneCard b{display:block;font-size:13px;margin:6px 0}.laneNo{color:var(--electric);font-size:11px;font-weight:800;letter-spacing:.12em}.auditPack{margin-top:17px;border:1px solid rgba(64,224,183,.25);border-radius:18px;background:linear-gradient(140deg,rgba(64,224,183,.065),rgba(78,162,255,.045));padding:16px}.auditPack h3{margin-top:0;color:var(--electric)}.auditPack .links a{font-weight:700}
+    .evidenceColumns{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:14px}.subPanel{background:rgba(7,16,30,.45);border:1px solid rgba(37,65,95,.65);border-radius:17px;padding:14px}.subPanel h3{margin-top:0}
+    .proGrid{grid-template-columns:repeat(3,minmax(0,1fr))}.proRail{margin-top:18px}
+    @media(max-width:1260px){.commandHero{grid-template-columns:1fr}.dataPanel{position:relative;top:auto;grid-row:auto}.grid{grid-template-columns:1fr}.builderPanel,.evidencePanel{grid-column:auto}.metricGrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}.proGrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:720px){.topnav{display:none}.commandHero{padding-top:25px}.commandHero h2{font-size:35px}.commandStatus,.verificationLane,.evidenceColumns,.proGrid,.metricGrid{grid-template-columns:1fr!important}.sectionTop{display:block}.stateBadge{display:inline-block;margin-top:8px}}
+  </style>
 </head>
 <body>
-<header>
-  <div><h1>StratProof Lab // Local Workbench</h1><div class="small">Use the full local auditor: download/import data, build formulas, run evidence audits, and save ideas before GitHub launch.</div></div>
+<header class="topbar">
+  <div class="brandWrap"><div class="brandMark">SP</div><div><h1>StratProof Lab</h1><div class="small">Evidence Command Center</div></div></div>
+  <nav class="topnav"><a href="#data">Data</a><a href="#formula">Formula</a><a href="#evidence">Evidence</a><a href="#exports">Audit Trail</a></nav>
   <div class="tag">Audit-only by design</div>
 </header>
+<section class="commandHero">
+  <div>
+    <div class="eyebrow">Community v2 / premium research interface</div>
+    <h2>Trust the evidence, not the backtest headline.</h2>
+    <p>Build a formula, run it against traceable candle inputs, and download every detected operation with the source path behind the verdict. Nothing here places an order.</p>
+    <div class="heroActions"><a href="#formula">Build an audit</a><button class="secondaryCta" onclick="runEvidenceLadderPair()">Run evidence ladder</button></div>
+  </div>
+  <div class="commandStatus">
+    <article class="pending" id="sourceCard"><span>Input provenance</span><strong id="sourceStatus">Select a dataset</strong><small id="sourceDetail">Download public candles or generate clearly marked synthetic demo data.</small></article>
+    <article class="pending" id="auditCard"><span>Audit engine</span><strong id="auditStatus">Waiting for formula</strong><small id="auditDetail">Strict and relaxed research paths are ready.</small></article>
+    <article class="pending" id="evidenceCard"><span>Verification pack</span><strong id="evidenceStatus">No exports yet</strong><small id="evidenceDetail">Maximum of three auditable CSV artifacts per run.</small></article>
+  </div>
+</section>
 <div class="grid">
-  <section class="panel">
+  <section class="panel dataPanel" id="data">
     <h2>1) Data Setup</h2>
-    <div class="small">Use public OHLCV data from Bybit, Binance, OKX, Coinbase or Kraken, or generate synthetic cache for offline tests. No API keys, no broker permissions.</div>
+    <div class="small">Load public OHLCV evidence from Bybit, Binance, OKX, Coinbase or Kraken, or use a clearly labeled synthetic cache for workflow tests. No API keys, no broker permissions.</div>
     <div class="row"><div><label>Provider</label><select id="provider" onchange="providerChanged()">
       <option value="bybit" data-status="live">Bybit — live downloader</option>
       <option value="binance" data-status="live">Binance — live downloader</option>
@@ -60,7 +93,7 @@
     <h3>Workbench Log</h3><div id="log" class="log">Ready.</div>
   </section>
 
-  <main class="panel glow">
+  <main class="panel glow builderPanel" id="formula">
     <h2>2) Formula Builder</h2>
     <div class="small">Create a real audit recipe. The workbench sends this JSON to the Idea Lab backtest runner.</div>
     <div class="row"><div><label>Idea name</label><input id="idea_name" value="BTC context pullback audit" /></div><div><label>Side</label><select id="side" onchange="sideChanged()"><option value="LONG">LONG</option><option value="SHORT">SHORT</option><option value="BOTH_PRO">LONG + SHORT comparison — Pro</option></select><div id="sideProNotice" class="proBox"><b>Pro preview:</b> LONG + SHORT comparison runs the same formula on both directions and produces a side-by-side report. Community lets you test LONG or SHORT one at a time.</div><div class="small muted">LONG and SHORT are separate hypotheses. Results can differ because entry direction, TP/SL path, trend context, and sample size change.</div></div></div>
@@ -73,21 +106,31 @@
     <div class="small">If the portable JSON is edited incorrectly, the workbench rebuilds it safely from the visual controls before running.</div><label>Portable formula JSON</label><textarea id="idea_json"></textarea>
   </main>
 
-  <aside class="panel">
-    <h2>3) Evidence Results</h2>
+  <aside class="panel evidencePanel" id="evidence">
+    <div class="sectionTop"><div><div class="eyebrow">Decision desk</div><h2>3) Evidence Results</h2><div class="small">A verdict is only the starting point. Trace it down to individual replay detections and stored candles.</div></div><div id="evidenceBadge" class="stateBadge">Awaiting audit</div></div>
     <div id="resultStatus" class="small">No audit run yet.</div>
-    <div class="cards" style="grid-template-columns:1fr; margin-top:12px">
+    <div class="cards metricGrid">
       <div class="card"><div class="small">Verdict</div><div id="verdict" class="metric verdictMetric yellow">—</div></div>
       <div class="card"><div class="small">Winrate</div><div id="winrate" class="metric">—</div></div>
       <div class="card"><div class="small">Net R simple</div><div id="netr" class="metric">—</div></div>
+      <div class="card"><div class="small">Closed outcomes</div><div id="closedOutcomes" class="metric">—</div></div>
     </div>
-    <h3>Evidence Guidance</h3><div id="guidance" class="small"><span class="muted">Run an audit to see sample-size guidance.</span></div>
-    <h3>Strict vs Relaxed Evidence Ladder</h3><div id="evidenceLadder" class="small"><span class="muted">Run strict audit, then relaxed audit, to see whether the idea is impossible or simply too strict.</span></div>
-    <h3>Latest Reports</h3><div id="links" class="links small"><span class="muted">Run an audit to generate report links.</span></div>
-    <h3>Audit Trail Downloads</h3><div id="evidenceCsvLinks" class="links small"><span class="muted">Run an audit to download up to three CSV evidence files.</span></div>
-
-    <h3>Pro Feature Preview</h3>
-    <div class="small muted">Community is fully usable for one formula and one side at a time. These previews show what paid plans unlock without connecting payments yet.</div>
+    <div class="verificationLane">
+      <div class="laneCard"><div class="laneNo">01 / DETECT</div><b>Operations ledger</b><div class="small">See every formula match and outcome.</div></div>
+      <div class="laneCard"><div class="laneNo">02 / TRACE</div><b>Candle path</b><div class="small">Review the OHLCV path used.</div></div>
+      <div class="laneCard"><div class="laneNo">03 / VISUALIZE</div><b>TradingView import</b><div class="small">Eligible closed LONG spot replays.</div></div>
+    </div>
+    <div class="auditPack" id="exports">
+      <h3>Audit Trail Downloads</h3><div id="evidenceCsvLinks" class="links small"><span class="muted">Run an audit to download up to three CSV evidence files.</span></div>
+    </div>
+    <div class="evidenceColumns">
+      <div class="subPanel"><h3>Evidence Guidance</h3><div id="guidance" class="small"><span class="muted">Run an audit to see sample-size guidance.</span></div></div>
+      <div class="subPanel"><h3>Strict vs Relaxed Ladder</h3><div id="evidenceLadder" class="small"><span class="muted">Run strict audit, then relaxed audit, to test whether filters starve the sample.</span></div></div>
+      <div class="subPanel"><h3>Latest Reports</h3><div id="links" class="links small"><span class="muted">Run an audit to generate report links.</span></div></div>
+      <div class="subPanel"><h3>Symbol Results</h3><div id="symbolResults" class="small"></div></div>
+    </div>
+    <div class="proRail"><h3>Planned Pro Research Scale</h3>
+    <div class="small muted">Community already includes auditable CSV exports. Paid editions are planned around larger research scale and collaboration, not hiding basic proof.</div>
     <div class="proGrid" id="proFeatureGrid">
       <div class="proFeature"><b>LONG + SHORT comparison</b><div class="proLock">Run both directions and get side-by-side WR, Net R, sample size, and symbol recommendations.</div><button onclick="showProPreview('LONG + SHORT comparison')">Preview Pro</button></div>
       <div class="proFeature"><b>Batch formula audit</b><div class="proLock">Audit many saved ideas at once and rank them by evidence score.</div><button onclick="showProPreview('Batch formula audit')">Preview Pro</button></div>
@@ -96,7 +139,7 @@
       <div class="proFeature"><b>Portfolio evidence</b><div class="proLock">Evaluate many symbols together and detect concentration/overlap risk.</div><button onclick="showProPreview('Portfolio evidence')">Preview Pro</button></div>
       <div class="proFeature"><b>Team workspace</b><div class="proLock">Shared saved ideas, roles, branded reports, and audit history for communities.</div><button onclick="showProPreview('Team workspace')">Preview Pro</button></div>
     </div>
-    <h3>Symbol Results</h3><div id="symbolResults" class="small"></div>
+    </div>
   </aside>
 </div>
 
@@ -112,6 +155,13 @@
 <script>
 const logEl = document.getElementById('log');
 function log(msg){ logEl.textContent = `[${new Date().toLocaleTimeString()}] ${msg}\n` + logEl.textContent; }
+function setCommandState(cardId, headlineId, detailId, headline, detail, state='pending'){
+  const card=document.getElementById(cardId);
+  card.classList.remove('pending','ready','live');
+  card.classList.add(state);
+  document.getElementById(headlineId).textContent=headline;
+  document.getElementById(detailId).textContent=detail;
+}
 function showProPreview(feature){
   const title=document.getElementById('proModalTitle');
   const body=document.getElementById('proModalBody');
@@ -161,6 +211,10 @@ function providerChanged(){
   else if(status==='live') note.textContent = `${opt.textContent.split('—')[0].trim()} can download public OHLCV in Community v2.`;
   else if(status==='import') note.textContent = 'CSV/local import is the safest universal path for unsupported exchanges and fiat/legacy platforms.';
   else note.textContent = `${opt.textContent.split('—')[0].trim()} is listed in the connector roadmap. For now, use CSV import/offline cache or one of the five live public downloads.`;
+  const providerName=opt.textContent.split('—')[0].trim();
+  const provenanceHeadline=status==='live' ? `${providerName} selected` : 'Import path selected';
+  const provenanceDetail=status==='live' ? 'Load public candle history before treating an audit as market evidence.' : 'Use an implemented connector or a reviewed CSV input for evidence.';
+  setCommandState('sourceCard','sourceStatus','sourceDetail',provenanceHeadline,provenanceDetail,'pending');
   buildIdeaJson(false);
 }
 function operatorOptions(indicator, selected){
@@ -262,11 +316,52 @@ function addBlock(kind){
 function buildIdeaJson(showLog=false){ const sideSel=document.getElementById('side'); if(sideSel.value==='BOTH_PRO'){ sideChanged(); } const idea={name:document.getElementById('idea_name').value, side:document.getElementById('side').value, exchange:document.getElementById('provider').value, market_type:document.getElementById('market_type').value, symbols:syncSymbolsFromPicker(), timeframe:document.getElementById('timeframe').value, timezone:document.getElementById('timezone').value, session:document.getElementById('session').value, score_threshold:Number(document.getElementById('score_threshold').value||65), blocks:blocks, exit_rules:{mode:'tp1_sl',tp1_r:1,sl_r:1}}; document.getElementById('idea_json').value=JSON.stringify(idea,null,2); if(showLog){ log(`JSON built: ${idea.blocks.length} blocks · ${idea.symbols.join(',')} · side ${idea.side} · score >= ${idea.score_threshold}`); } return idea; }
 function getCurrentIdeaOrRebuild(context){ const raw=document.getElementById('idea_json').value; try{ const parsed=JSON.parse(raw); if(!parsed.blocks || !Array.isArray(parsed.blocks)){ throw new Error('formula JSON missing blocks array'); } return parsed; }catch(e){ const rebuilt=buildIdeaJson(false); log((context||'JSON')+' warning: portable JSON was invalid, rebuilt from visual controls. '+e.message); return rebuilt; }}
 function thresholdList(){ return document.getElementById('thresholds').value.split(',').map(x=>Number(x.trim())).filter(x=>!isNaN(x)); }
-async function generateDemoCache(){ try{ log('Generating offline cache...'); const data=await api('/api/generate_demo_cache',{provider:provider.value,market_type:market_type.value,symbols:syncSymbolsFromPicker().join(','),timeframe:document.getElementById('timeframe').value,context_timeframe:document.getElementById('context_timeframe').value}); log('Demo cache generated: '+(data.ok?'PASS':'FAIL')); }catch(e){log('ERROR '+e.message)} }
-async function downloadHistory(){ try{ log('Downloading public history...'); const data=await api('/api/download_history',{provider:provider.value,market_type:market_type.value,symbols:syncSymbolsFromPicker().join(','),timeframe:timeframe.value,context_timeframe:context_timeframe.value,days:Number(days.value),limit:Number(limit.value),include_btc_context:true}); log('Download complete: '+(data.ok?'PASS':'FAIL')+'\n'+data.commands.map(c=>c.stdout||c.stderr).join('\n')); }catch(e){log('DOWNLOAD ERROR '+e.message+' — if internet/provider blocks it, use Generate offline demo cache.')} }
-function renderAuditResult(data, label){ const o=data.report.overall||{}; if(label.toLowerCase().startsWith('strict')) lastStrictAudit=data; if(label.toLowerCase().startsWith('relaxed')) lastRelaxedAudit=data; verdict.textContent=o.verdict||'—'; winrate.textContent=(o.winrate_pct??'—')+'%'; netr.textContent=(o.net_r_simple??'—'); const diag=o.sample_diagnostics||{}; resultStatus.innerHTML=`<span class="ok">${escapeHtml(label)} complete.</span><br>Known=${escapeHtml(o.known)}, Wins=${escapeHtml(o.wins)}, Losses=${escapeHtml(o.losses)}, Signals=${escapeHtml(o.signals_total)}<br><span class="muted">Reports and audit trail exports are ready below.</span>`; const reasons=(diag.reasons||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join(''); const recs=(diag.recommended_next_tests||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join(''); guidance.innerHTML = diag.sample_status ? `<div class="pill">${escapeHtml(diag.sample_status)}</div><div class="small"><b>Why:</b><ul>${reasons}</ul><b>Next tests:</b><ul>${recs}</ul></div>` : '<span class="muted">No extra guidance needed.</span>'; renderEvidenceLadder(); links.innerHTML=`${data.report_html_url?`<a class="reportHeroLink" href="${safeUrl(data.report_html_url)}" target="_blank">Open visual evidence report</a>`:''}<a href="${safeUrl(data.report_md_url)}" target="_blank">Open Markdown report</a><a href="${safeUrl(data.report_json_url)}" target="_blank">Open JSON report</a><a href="${safeUrl(data.threshold_md_url)}" target="_blank">Open threshold comparison</a><div class="pill">Markdown: ${escapeHtml(data.report_md)}</div>`; const exports=(data.evidence_csvs||[]).slice(0,3); evidenceCsvLinks.innerHTML=`<div class="small warn">${escapeHtml(data.evidence_notice || 'Historical replay evidence only; not executed trades.')}</div>${exports.map(item=>`<a href="${safeUrl(item.url)}" download>${escapeHtml(item.label)} · ${escapeHtml(item.rows)} rows</a><div class="small muted">${escapeHtml(item.description)}</div>`).join('') || '<span class="muted">No CSV exports generated.</span>'}<div class="pill">Maximum: 3 CSV files per audit</div>`; symbolResults.innerHTML=(data.report.symbol_results||[]).map(r=>`<div class="pill">${escapeHtml(r.symbol)} ${escapeHtml(r.side)}: ${escapeHtml(r.known)} known · WR ${escapeHtml(r.winrate_pct)}% · Net ${escapeHtml(r.net_r_simple)} · ${escapeHtml(r.verdict)}</div>`).join('') || '<span class="muted">No symbol results available yet.</span>'; log(`${label} PASS: ${o.verdict||''} · known=${o.known} · ${exports.length} CSV audit trail exports ready`); }
-async function runAudit(){ try{ const idea=getCurrentIdeaOrRebuild('Strict audit'); const th=thresholdList(); log('Running strict audit...'); const data=await api('/api/audit_idea',{idea:idea,thresholds:th}); renderAuditResult(data, 'Strict audit'); return data; }catch(e){log('AUDIT ERROR '+e.message); return null;} }
-async function runRelaxedAudit(){ try{ const idea=getCurrentIdeaOrRebuild('Relaxed audit'); const th=thresholdList(); log('Running relaxed discovery audit...'); const data=await api('/api/relaxed_audit',{idea:idea,thresholds:th}); renderAuditResult(data, 'Relaxed discovery audit'); log('Relaxed audit is for sample-size discovery only. Final evidence must use the strict formula.'); return data; }catch(e){log('RELAXED AUDIT ERROR '+e.message); return null;} }
+async function generateDemoCache(){
+  try{
+    setCommandState('sourceCard','sourceStatus','sourceDetail','Generating demo cache','Synthetic candles are being created locally.','pending');
+    log('Generating offline cache...');
+    const data=await api('/api/generate_demo_cache',{provider:provider.value,market_type:market_type.value,symbols:syncSymbolsFromPicker().join(','),timeframe:document.getElementById('timeframe').value,context_timeframe:document.getElementById('context_timeframe').value});
+    setCommandState('sourceCard','sourceStatus','sourceDetail','Synthetic demo loaded','Workflow test only; exports are labeled as non-market evidence.','ready');
+    log('Demo cache generated: '+(data.ok?'PASS':'FAIL'));
+  }catch(e){ setCommandState('sourceCard','sourceStatus','sourceDetail','Data load failed','Review the Workbench log before auditing.','pending'); log('ERROR '+e.message); }
+}
+async function downloadHistory(){
+  try{
+    const chosenProvider=document.getElementById('provider').value.toUpperCase();
+    setCommandState('sourceCard','sourceStatus','sourceDetail','Loading public candles',`${chosenProvider} history request in progress.`, 'pending');
+    log('Downloading public history...');
+    const data=await api('/api/download_history',{provider:provider.value,market_type:market_type.value,symbols:syncSymbolsFromPicker().join(','),timeframe:timeframe.value,context_timeframe:context_timeframe.value,days:Number(days.value),limit:Number(limit.value),include_btc_context:true});
+    setCommandState('sourceCard','sourceStatus','sourceDetail','Public history loaded',`${chosenProvider} stored candles ready for a traceable audit.`, 'live');
+    log('Download complete: '+(data.ok?'PASS':'FAIL')+'\n'+data.commands.map(c=>c.stdout||c.stderr).join('\n'));
+  }catch(e){ setCommandState('sourceCard','sourceStatus','sourceDetail','Public download failed','Use an available connector or labeled offline demo data.','pending'); log('DOWNLOAD ERROR '+e.message+' — if internet/provider blocks it, use Generate offline demo cache.'); }
+}
+function renderAuditResult(data, label){
+  const o=data.report.overall||{};
+  if(label.toLowerCase().startsWith('strict')) lastStrictAudit=data;
+  if(label.toLowerCase().startsWith('relaxed')) lastRelaxedAudit=data;
+  verdict.textContent=o.verdict||'—';
+  winrate.textContent=(o.winrate_pct??'—')+'%';
+  netr.textContent=(o.net_r_simple??'—');
+  closedOutcomes.textContent=o.known??'—';
+  const exports=(data.evidence_csvs||[]).slice(0,3);
+  const exportedRows=exports.reduce((sum,item)=>sum+Number(item.rows||0),0);
+  document.getElementById('evidenceBadge').textContent=label+' complete';
+  document.getElementById('evidenceBadge').classList.add('ready');
+  setCommandState('auditCard','auditStatus','auditDetail',o.verdict||'Audit complete',`${o.known||0} closed outcomes · ${o.signals_total||0} detections`, 'live');
+  setCommandState('evidenceCard','evidenceStatus','evidenceDetail',`${exports.length} files ready`,`${exportedRows} rows available for verification.`, 'live');
+  const diag=o.sample_diagnostics||{};
+  resultStatus.innerHTML=`<span class="ok">${escapeHtml(label)} complete.</span><br>Known=${escapeHtml(o.known)}, Wins=${escapeHtml(o.wins)}, Losses=${escapeHtml(o.losses)}, Signals=${escapeHtml(o.signals_total)}<br><span class="muted">Reports and audit trail exports are ready below.</span>`;
+  const reasons=(diag.reasons||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join('');
+  const recs=(diag.recommended_next_tests||[]).map(x=>`<li>${escapeHtml(x)}</li>`).join('');
+  guidance.innerHTML = diag.sample_status ? `<div class="pill">${escapeHtml(diag.sample_status)}</div><div class="small"><b>Why:</b><ul>${reasons}</ul><b>Next tests:</b><ul>${recs}</ul></div>` : '<span class="muted">No extra guidance needed.</span>';
+  renderEvidenceLadder();
+  links.innerHTML=`${data.report_html_url?`<a class="reportHeroLink" href="${safeUrl(data.report_html_url)}" target="_blank">Open visual evidence report</a>`:''}<a href="${safeUrl(data.report_md_url)}" target="_blank">Open Markdown report</a><a href="${safeUrl(data.report_json_url)}" target="_blank">Open JSON report</a><a href="${safeUrl(data.threshold_md_url)}" target="_blank">Open threshold comparison</a>`;
+  evidenceCsvLinks.innerHTML=`<div class="small warn">${escapeHtml(data.evidence_notice || 'Historical replay evidence only; not executed trades.')}</div>${exports.map(item=>`<a href="${safeUrl(item.url)}" download>${escapeHtml(item.label)} · ${escapeHtml(item.rows)} rows</a><div class="small muted">${escapeHtml(item.description)}</div>`).join('') || '<span class="muted">No CSV exports generated.</span>'}<div class="pill">Maximum: 3 CSV files per audit</div>`;
+  symbolResults.innerHTML=(data.report.symbol_results||[]).map(r=>`<div class="pill">${escapeHtml(r.symbol)} ${escapeHtml(r.side)}: ${escapeHtml(r.known)} known · WR ${escapeHtml(r.winrate_pct)}% · Net ${escapeHtml(r.net_r_simple)} · ${escapeHtml(r.verdict)}</div>`).join('') || '<span class="muted">No symbol results available yet.</span>';
+  log(`${label} PASS: ${o.verdict||''} · known=${o.known} · ${exports.length} CSV audit trail exports ready`);
+}
+async function runAudit(){ try{ const idea=getCurrentIdeaOrRebuild('Strict audit'); const th=thresholdList(); setCommandState('auditCard','auditStatus','auditDetail','Running strict audit','Evaluating the configured hypothesis now.','pending'); log('Running strict audit...'); const data=await api('/api/audit_idea',{idea:idea,thresholds:th}); renderAuditResult(data, 'Strict audit'); return data; }catch(e){ setCommandState('auditCard','auditStatus','auditDetail','Audit failed','Review the log and input data.','pending'); log('AUDIT ERROR '+e.message); return null;} }
+async function runRelaxedAudit(){ try{ const idea=getCurrentIdeaOrRebuild('Relaxed audit'); const th=thresholdList(); setCommandState('auditCard','auditStatus','auditDetail','Running discovery audit','Testing a wider sample boundary.','pending'); log('Running relaxed discovery audit...'); const data=await api('/api/relaxed_audit',{idea:idea,thresholds:th}); renderAuditResult(data, 'Relaxed discovery audit'); log('Relaxed audit is for sample-size discovery only. Final evidence must use the strict formula.'); return data; }catch(e){ setCommandState('auditCard','auditStatus','auditDetail','Audit failed','Review the log and input data.','pending'); log('RELAXED AUDIT ERROR '+e.message); return null;} }
 async function runEvidenceLadderPair(){ log('Running strict + relaxed evidence ladder...'); const strict=await runAudit(); const relaxed=await runRelaxedAudit(); if(strict && relaxed){ log('Evidence ladder complete: strict known='+(strict.report.overall.known||0)+' · relaxed known='+(relaxed.report.overall.known||0)); }}
 async function saveCurrentIdea(){ try{ const idea=getCurrentIdeaOrRebuild('Save idea'); const data=await api('/api/save_idea',{idea}); log('Saved idea '+data.idea_hash.slice(0,12)); loadSavedIdeas(); }catch(e){log('SAVE ERROR '+e.message)} }
 async function loadSavedIdeas(){ try{ const res=await fetch('/api/saved_ideas'); const data=await res.json(); savedIdeas.innerHTML=(data.ideas||[]).map(x=>`<div class="pill" onclick="loadIdea('${escapeHtml(x.idea_hash)}')">${escapeHtml(x.title)} · ${escapeHtml(x.idea_hash.slice(0,8))}</div>`).join('') || '<span class="muted">No saved ideas yet.</span>'; }catch(e){log('SAVED IDEAS ERROR '+e.message)} }

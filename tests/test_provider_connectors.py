@@ -139,7 +139,7 @@ class LocalStoreTests(unittest.TestCase):
     def test_audit_exports_three_traceable_csv_files_and_tradingview_spot_replay(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             path = cache_path(directory, "okx", "spot", "BTCUSDT", "5m")
-            candles = [self.candle(1_700_000_000 + index * 300, 100.0 + index / 10) for index in range(90)]
+            candles = [self.candle(1_700_000_000 + index * 300, 100.0 + index / 10) for index in range(130)]
             merge_ohlcv_csv(path, candles)
             idea = {
                 "name": "Evidence export",
@@ -154,6 +154,8 @@ class LocalStoreTests(unittest.TestCase):
             self.assertGreater(exports[0]["rows"], 0)
             self.assertGreater(exports[1]["rows"], exports[0]["rows"])
             self.assertGreater(exports[2]["rows"], 0)
+            self.assertEqual(report.overall["sample_diagnostics"]["sample_status"], "ENOUGH_FOR_INITIAL_REVIEW")
+            self.assertNotIn("below the preferred", " ".join(report.overall["sample_diagnostics"]["reasons"]))
             with exports[0]["path"].open(newline="", encoding="utf-8") as input_file:
                 operations = list(csv.DictReader(input_file))
             self.assertEqual(operations[0]["detection_type"], "HISTORICAL_REPLAY_DETECTION")

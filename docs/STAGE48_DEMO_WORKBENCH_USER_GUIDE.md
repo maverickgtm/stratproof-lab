@@ -4,7 +4,7 @@ This guide explains how a new user should test StratProof Lab Community before G
 
 ## What this Community demo is
 
-The Community demo is a local audit workbench. It lets a user build a trading hypothesis, import or generate market data, run an audit, compare strict vs relaxed evidence, and open a visual evidence report.
+The Community demo is a local **Evidence Command Center**. It lets a user build a trading hypothesis, import or generate market data, run an audit, compare strict vs relaxed evidence, open a visual report, and download the operations and candle paths behind the result.
 
 It is **audit-only by design**. It does not place trades, connect to broker execution, publish signals, or manage funds.
 
@@ -41,7 +41,7 @@ Use it for:
 
 Important: Public history downloads depend on exchange availability, network access, symbols supported by the exchange, and candle limits.
 
-## Correct workbench order
+## Correct Evidence Command Center order
 
 Open the workbench:
 
@@ -108,6 +108,14 @@ Then follow this order:
     - Use **Save Idea** after building a formula worth revisiting.
 
 ## Area guide
+
+### Command status rail
+
+The top status rail makes the evidence workflow explicit:
+
+- Input provenance tells the user whether public history has been loaded or the workflow is using synthetic demo inputs.
+- Audit engine shows whether the strict or discovery audit is running and how many outcomes closed.
+- Verification pack reports when the maximum-three CSV audit trail is ready.
 
 ### Area 1 — Data Setup
 
