@@ -8,7 +8,10 @@
 
 Build an idea -> load public candles -> run a chronological replay -> download the evidence behind the result.
 
-[Quickstart](#quickstart) | [What Works Today](#what-works-today) | [Audit Trail](#audit-trail) | [Limits](#current-limits) | [Roadmap](#roadmap) | [Contributing](#contributing)
+**[Launch the live interactive demo](https://stratproof-43-157-95-145.nip.io/)**<br>
+Synthetic evidence only in the hosted demo. No broker execution.
+
+[Live Demo](https://stratproof-43-157-95-145.nip.io/) | [Quickstart](#quickstart) | [What Works Today](#what-works-today) | [Audit Trail](#audit-trail) | [Limits](#current-limits) | [Roadmap](#roadmap) | [Contributing](#contributing)
 
 </div>
 
